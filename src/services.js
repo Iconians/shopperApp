@@ -28,6 +28,7 @@ class ProductService {
           const json = await response.json()
           const products = json.data
           .map((item) => ({
+            id: item.id,
             categories: item.categories.map((item) => item.slug),
             price: item.price.formatted_with_symbol,
             name: item.name,

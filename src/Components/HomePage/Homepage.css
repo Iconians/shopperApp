@@ -1,0 +1,6 @@
+.specials-container,
+.hat-container,
+.shirts-container,
+.belts-container,
+.pants-container,
+.footwear-container {display: flex;}
