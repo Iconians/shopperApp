@@ -34,7 +34,8 @@ class ProductService {
             name: item.name,
             inventory: item.inventory.available,
             desc: item.description,
-            img: item.image.url
+            img: item.image.url,
+            qty: 1
           }))
           success( {response, products} )
         } else {

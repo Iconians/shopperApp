@@ -1,6 +1,39 @@
+.nav-bar {display: flex;}
+.nav-list {
+  display: flex;
+  list-style: none;
+}
+
+.brand-name {
+  margin-right: auto;
+  margin-left: 30px;
+}
+
+.nav-list > li {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.cart-container {
+  position: relative;
+  margin-right: 30px;
+  cursor: pointer;
+}
+
+.cart-number {
+  position: absolute;
+  left: 13px;
+  top: 17px;
+}
+
+.cart-icon {margin-top: 15px;}
+
 .specials-container,
 .hat-container,
 .shirts-container,
 .belts-container,
 .pants-container,
-.footwear-container {display: flex;}
+.footwear-container {
+  display: flex;
+  justify-content: space-around;
+}
