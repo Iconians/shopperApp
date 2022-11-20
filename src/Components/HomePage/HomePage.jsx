@@ -107,6 +107,7 @@ class HomePage extends React.Component {
   };
 
   render() {
+    const heading = ["hats", "shirts", "belts", "pants", "footwear"];
     const {
       products,
       loading,
@@ -154,30 +155,31 @@ class HomePage extends React.Component {
           </nav>
         </div>
         <div className="main-body">
-          <div className="specials">
-            <div className="specials-title">
-              <h2>SPECIALS</h2>
+          {heading.map((heading) => (
+            <div className={`${heading}-title`}>
+              <h2>{heading.toUpperCase()}</h2>
             </div>
-            <div className="specials-container">
-              {!loading ? (
-                products.map((item) =>
-                  item.categories[1] === "specials" ? (
-                    <ItemComponent
-                      img={item.img}
-                      title={item.name}
-                      price={item.price}
-                      id={item.id}
-                      openItemPage={this.openItemModal}
-                      addToCart={this.addToCart}
-                    />
-                  ) : null
-                )
-              ) : (
-                <div>...Loading</div>
-              )}
-            </div>
-          </div>
-          <div className="hats">
+          ))}
+          {!loading ? (
+            products.map((item) => (
+              <div className={`${item.categories[0]}-container`}>
+                {item.categories[1] === item ? (
+                  <ItemComponent
+                    img={item.img}
+                    title={item.name}
+                    price={item.price}
+                    id={item.id}
+                    openItemPage={this.openItemModal}
+                    addToCart={this.addToCart}
+                  />
+                ) : null}
+              </div>
+            ))
+          ) : (
+            <div>...Loading</div>
+          )}
+
+          {/* <div className="hats">
             <div className="hat-title">
               <h2>HATS</h2>
             </div>
@@ -290,8 +292,8 @@ class HomePage extends React.Component {
               ) : (
                 <div>...Loading</div>
               )}
-            </div>
-          </div>
+            </div> */}
+          {/* </div> */}
           {showCategoryPage ? (
             <CategoryPage
               products={selectedCategory}
