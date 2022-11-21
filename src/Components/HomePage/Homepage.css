@@ -4,9 +4,12 @@
   list-style: none;
 }
 
-.brand-name {
-  margin-right: auto;
-  margin-left: 30px;
+.brand-name {margin-left: 30px;}
+
+.search-div {margin: auto;}
+.search-div > input {
+  width: 500px;
+  padding: 10px;
 }
 
 .nav-list > li {
@@ -26,7 +29,16 @@
   top: 17px;
 }
 
-.cart-icon {margin-top: 15px;}
+.cart-icon {
+  margin-top: 20px;
+  font-size: 20px;
+  color: lightgray;
+}
+
+.main-body {
+  display: grid;
+    grid-template-columns: repeat(5, 1fr);
+}
 
 .specials-container,
 .hat-container,
@@ -34,6 +46,5 @@
 .belts-container,
 .pants-container,
 .footwear-container {
-  display: flex;
-  justify-content: space-around;
+padding: 20px;
 }

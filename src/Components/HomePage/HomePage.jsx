@@ -5,6 +5,9 @@ import CategoryPage from "../CategoryPage/CategoryPage";
 import ItemComponent from "../ItemComponent/ItemComponent";
 import ItemPage from "../ItemPage/ItemPage";
 import AccountForms from "../AccountForms/AccountForms";
+import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import CartPage from "../CartPage/CartPage";
 
 const products = new ProductService();
 class HomePage extends React.Component {
@@ -17,10 +20,13 @@ class HomePage extends React.Component {
       selectedProduct: [],
       selectedCategory: [],
       cartItems: [],
+      searchResults: [],
       selectedCategoryName: "",
       error: false,
       showCategoryPage: false,
       showItemPage: false,
+      numberOfCartItems: 0,
+      index: 0,
     };
   }
 
@@ -47,6 +53,15 @@ class HomePage extends React.Component {
     );
   }
 
+  updatCartIcon = () => {
+    const { cartItems } = this.state;
+    let newQty = 0;
+    const updatedNum = cartItems.map((product) => product.qty + newQty);
+    this.setState({
+      numberOfCartItems: updatedNum.reduce((accum, val) => accum + val, 1),
+    });
+  };
+
   addToCart = ({ target: { id } }) => {
     const { products, cartItems } = this.state;
     const findIndex = products.findIndex((product) => product.id === id);
@@ -69,6 +84,20 @@ class HomePage extends React.Component {
         cartItems: updateProduct,
       });
     }
+    this.updatCartIcon();
+  };
+
+  searchProducts = ({ target: { value } }) => {
+    const { products } = this.state;
+    const results = products.filter((item) => {
+      return Object.values(item)
+        .join("")
+        .toLowerCase()
+        .includes(value.toLowerCase());
+    });
+    this.setState({
+      searchResults: results,
+    });
   };
 
   openAccountForm = () => {
@@ -106,8 +135,28 @@ class HomePage extends React.Component {
     this.setState({ showCategoryPage: false });
   };
 
+  openCartPage = () => {
+    this.setState({ index: 1 });
+  };
+
+  closeCartPage = () => {
+    this.setState({ index: 0 });
+  };
+
   render() {
-    const heading = ["hats", "shirts", "belts", "pants", "footwear"];
+    const navHeadings = [
+      {
+        heading: "HATS",
+        key: 1,
+      },
+      {
+        heading: "SHIRTS",
+        key: 2,
+      },
+      { heading: "BELTS", key: 3 },
+      { heading: "PANTS", key: 4 },
+      { heading: "FOOT WEAR", key: 5 },
+    ];
     const {
       products,
       loading,
@@ -116,8 +165,11 @@ class HomePage extends React.Component {
       selectedProduct,
       selectedCategory,
       selectedCategoryName,
+      numberOfCartItems,
       cartItems,
       signin,
+      index,
+      searchResults,
     } = this.state;
     return (
       <section>
@@ -126,201 +178,106 @@ class HomePage extends React.Component {
             <div className="brand-name">
               <h3>Clothing Essentials</h3>
             </div>
+            <div className="search-div">
+              <input
+                type="text"
+                placeholder="Search"
+                onChange={this.searchProducts}
+              />
+            </div>
             <div onClick={this.openAccountForm}>Login/Signup</div>
             <div>
               <ul className="nav-list">
-                <li id="hats" onClick={this.openCategoryModal} key={1}>
-                  HATS
-                </li>
-                <li id="shirts" onClick={this.openCategoryModal} key={2}>
-                  SHIRTS
-                </li>
-                <li id="belts" onClick={this.openCategoryModal} key={3}>
-                  BELTS
-                </li>
-                <li id="pants" onClick={this.openCategoryModal} key={4}>
-                  PANTS
-                </li>
-                <li id="foot-wear" onClick={this.openCategoryModal} key={5}>
-                  FOOT WEAR
-                </li>
+                {navHeadings.map((heading) => (
+                  <li
+                    id={heading.heading.toLowerCase().replace(" ", "-")}
+                    onClick={this.openCategoryModal}
+                    key={heading.key}
+                  >
+                    {heading.heading}
+                  </li>
+                ))}
               </ul>
             </div>
-            <div className="cart-container">
-              <span className="cart-number">{cartItems.length}</span>
+            <div className="cart-container" onClick={this.openCartPage}>
+              <span className="cart-number">{numberOfCartItems}</span>
               <span>
-                <img className="cart-icon" src="/cart.png" alt="" />
+                {
+                  <FontAwesomeIcon
+                    icon={faCartShopping}
+                    className="cart-icon"
+                  />
+                }
               </span>
             </div>
           </nav>
         </div>
-        <div className="main-body">
-          {heading.map((heading) => (
-            <div className={`${heading}-title`}>
-              <h2>{heading.toUpperCase()}</h2>
-            </div>
-          ))}
-          {!loading ? (
-            products.map((item) => (
-              <div className={`${item.categories[0]}-container`}>
-                {item.categories[1] === item ? (
-                  <ItemComponent
-                    img={item.img}
-                    title={item.name}
-                    price={item.price}
-                    id={item.id}
-                    openItemPage={this.openItemModal}
-                    addToCart={this.addToCart}
-                  />
-                ) : null}
-              </div>
-            ))
-          ) : (
-            <div>...Loading</div>
-          )}
+        {index === 0 ? (
+          <div className="main-body">
+            {!loading ? (
+              searchResults[0] ? (
+                searchResults.map((item) => (
+                  <div className={`${item.categories[0]}-container`}>
+                    {
+                      <ItemComponent
+                        img={item.img}
+                        title={item.name}
+                        price={item.price}
+                        id={item.id}
+                        openItemPage={this.openItemModal}
+                        addToCart={this.addToCart}
+                      />
+                    }
+                  </div>
+                ))
+              ) : (
+                products.map((item) => (
+                  <div className={`${item.categories[0]}-container`}>
+                    {
+                      <ItemComponent
+                        img={item.img}
+                        title={item.name}
+                        price={item.price}
+                        id={item.id}
+                        openItemPage={this.openItemModal}
+                        addToCart={this.addToCart}
+                      />
+                    }
+                  </div>
+                ))
+              )
+            ) : (
+              <div className="loading-div">...Loading</div>
+            )}
+            {showCategoryPage ? (
+              <CategoryPage
+                products={selectedCategory}
+                showCategoryPage={showCategoryPage}
+                handleClose={this.handleCategoryModalClose}
+                openItemModal={this.openItemModal}
+                title={selectedCategoryName}
+                addToCart={this.addToCart}
+              />
+            ) : null}
+            {showItemPage ? (
+              <ItemPage
+                product={selectedProduct}
+                showItemPage={showItemPage}
+                handleClose={this.handleItmeModalClose}
+                addToCart={this.addToCart}
+              />
+            ) : null}
+            {signin ? <AccountForms /> : null}
+          </div>
+        ) : null}
 
-          {/* <div className="hats">
-            <div className="hat-title">
-              <h2>HATS</h2>
-            </div>
-            <div className="hat-container">
-              {!loading ? (
-                products.map((item) =>
-                  item.categories[0] === "hats" ? (
-                    <ItemComponent
-                      img={item.img}
-                      title={item.name}
-                      price={item.price}
-                      id={item.id}
-                      openItemPage={this.openItemModal}
-                      addToCart={this.addToCart}
-                    />
-                  ) : null
-                )
-              ) : (
-                <div>...Loading</div>
-              )}
-            </div>
-          </div>
-          <div className="shirts">
-            <div className="shirts-title">
-              <h2>SHIRTS</h2>
-            </div>
-            <div className="shirts-container">
-              {!loading ? (
-                products.map((item) =>
-                  item.categories[0] === "shirts" ? (
-                    <ItemComponent
-                      img={item.img}
-                      title={item.name}
-                      price={item.price}
-                      id={item.id}
-                      openItemPage={this.openItemModal}
-                      addToCart={this.addToCart}
-                    />
-                  ) : null
-                )
-              ) : (
-                <div>...Loading</div>
-              )}
-            </div>
-          </div>
-          <div className="belts">
-            <div className="belts-title">
-              <h2>BELTS</h2>
-            </div>
-            <div className="belts-container">
-              {!loading ? (
-                products.map((item) =>
-                  item.categories[0] === "belts" ? (
-                    <ItemComponent
-                      img={item.img}
-                      title={item.name}
-                      price={item.price}
-                      id={item.id}
-                      openItemPage={this.openItemModal}
-                      addToCart={this.addToCart}
-                    />
-                  ) : null
-                )
-              ) : (
-                <div>...Loading</div>
-              )}
-            </div>
-          </div>
-          <div className="pants">
-            <div className="pants-title">
-              <h2>PANTS</h2>
-            </div>
-            <div className="pants-container">
-              {!loading ? (
-                products.map((item) =>
-                  item.categories[0] === "pants" ? (
-                    <ItemComponent
-                      img={item.img}
-                      title={item.name}
-                      price={item.price}
-                      id={item.id}
-                      openItemPage={this.openItemModal}
-                      addToCart={this.addToCart}
-                    />
-                  ) : null
-                )
-              ) : (
-                <div>...Loading</div>
-              )}
-            </div>
-          </div>
-          <div className="footwear">
-            <div className="footwear-title">
-              <h2>FOOT WEAR</h2>
-            </div>
-            <div className="footwear-container">
-              {!loading ? (
-                products.map((item) =>
-                  item.categories[0] === "foot-wear" ? (
-                    <ItemComponent
-                      img={item.img}
-                      title={item.name}
-                      price={item.price}
-                      id={item.id}
-                      openItemPage={this.openItemModal}
-                      addToCart={this.addToCart}
-                    />
-                  ) : null
-                )
-              ) : (
-                <div>...Loading</div>
-              )}
-            </div> */}
-          {/* </div> */}
-          {showCategoryPage ? (
-            <CategoryPage
-              products={selectedCategory}
-              showCategoryPage={showCategoryPage}
-              handleClose={this.handleCategoryModalClose}
-              openItemModal={this.openItemModal}
-              title={selectedCategoryName}
-              addToCart={this.addToCart}
-            />
-          ) : null}
-          {showItemPage ? (
-            <ItemPage
-              product={selectedProduct}
-              showItemPage={showItemPage}
-              handleClose={this.handleItmeModalClose}
-              addToCart={this.addToCart}
-            />
-          ) : null}
-          {signin ? <AccountForms /> : null}
-        </div>
-        <footer>
-          <a href="https://iconscout.com/icons/cart">Cart Icon</a> by{" "}
-          <a href="https://iconscout.com/contributors/vaadin-icons">
-            Vaadin Icons
-          </a>{" "}
-          on <a href="https://iconscout.com">IconScout</a>
-        </footer>
+        {index === 1 ? (
+          <CartPage
+            products={cartItems}
+            closeCartPage={this.closeCartPage}
+            openItemPage={this.openItemModal}
+          />
+        ) : null}
       </section>
     );
   }

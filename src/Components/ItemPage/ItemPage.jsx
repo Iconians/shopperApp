@@ -30,7 +30,7 @@ const ItemPage = ({ product, showItemPage, handleClose, addToCart }) => {
                 />
               </div>
               <input type="button" value="Close" onClick={handleClose} />
-            </div>
+            </div> // make change quantity select field
           ))
         ) : (
           <div>...Loading</div>
