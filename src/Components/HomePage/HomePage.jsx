@@ -27,6 +27,14 @@ class HomePage extends React.Component {
       showItemPage: false,
       numberOfCartItems: 0,
       index: 0,
+      subTotal: 0,
+      discounts: 0,
+      discountCodes: {
+        fiveoff: 5,
+        twentyoff: 20,
+        fiftyoff: 50,
+      },
+      cartTotal: 0,
     };
   }
 
@@ -109,25 +117,58 @@ class HomePage extends React.Component {
       });
     }
     this.updatCartIcon(selectedProduct[0].qty);
+    this.updateSummaryDetails(selectedProduct, 1);
   };
 
   removeFromCart = (id) => {
     const { cartItems } = this.state;
     let newCartList = cartItems.filter((product) => product.id !== id);
+    const deletedItem = cartItems.filter((product) => product.id === id);
     this.setState({
       cartItems: newCartList,
     });
-    console.log(newCartList, cartItems);
+    if (newCartList.length === 0) {
+      this.updateSummaryDetails([{ price2: 0, qty: 0 }]);
+    } else {
+      this.updateSummaryDetails(deletedItem, 0);
+    }
     this.updatCartIcon(-1);
   };
 
   removeFromCartFaClose = ({ target: { id } }) => {
     const { cartItems } = this.state;
-    let newCartList = cartItems.filter((product) => product.id !== id);
+    const newCartList = cartItems.filter((product) => product.id !== id);
+    const deletedItem = cartItems.filter((product) => product.id === id);
     this.setState({
       cartItems: cartItems === 1 ? [] : newCartList,
     });
+    if (newCartList.length === 0) {
+      this.updateSummaryDetails([{ price2: 0, qty: 0 }]);
+    } else {
+      this.updateSummaryDetails(deletedItem, 0);
+    }
     this.updatCartIcon(-1);
+  };
+
+  updateSummaryDetails = (products, num) => {
+    const { subTotal } = this.state;
+    let sum = 0;
+    const newItemPrice = products.map((product) => {
+      const findCost = product.price2 * product.qty;
+      return (sum = findCost);
+    });
+    if (num === 1) {
+      const total = subTotal + newItemPrice[0];
+      this.setState({
+        subTotal: parseFloat(total.toFixed(2)),
+      });
+    } else {
+      const total = subTotal - newItemPrice[0];
+      this.setState({
+        subTotal: sum === 0 ? sum : parseFloat(total.toFixed(2)),
+      });
+    }
+    console.log(products, sum, newItemPrice, newItemPrice[0]);
   };
 
   searchProducts = ({ target: { value } }) => {
@@ -140,6 +181,36 @@ class HomePage extends React.Component {
     });
     this.setState({
       searchResults: results,
+    });
+  };
+
+  applydiscount = (code) => {
+    let codeValue = 0;
+    const { discountCodes, subTotal } = this.state;
+    Object.keys(discountCodes).forEach((val) => {
+      if (val === code) {
+        this.setState({ discounts: discountCodes[val] });
+        codeValue = discountCodes[val];
+      }
+      console.log(codeValue);
+    });
+    this.updateTotal(subTotal, 0, codeValue);
+  };
+
+  updateTotal = (subtotal, price, codeValue) => {
+    const { discounts } = this.state;
+    let sum = 0;
+    if (codeValue === 0) {
+      let interger1 = Math.max(subtotal - discounts);
+      let total = Math.max(interger1 + price);
+      sum = total;
+    } else {
+      let interger1 = Math.max(subtotal - codeValue);
+      let total = Math.max(interger1 + price);
+      sum = total;
+    }
+    this.setState({
+      cartTotal: sum.toFixed(2),
     });
   };
 
@@ -213,6 +284,10 @@ class HomePage extends React.Component {
       signin,
       index,
       searchResults,
+      subTotal,
+      discounts,
+      discountCodes,
+      cartTotal,
     } = this.state;
     return (
       <section>
@@ -302,6 +377,11 @@ class HomePage extends React.Component {
             openItemPage={this.openItemModal}
             updateQty={this.updatProductQty}
             removeFromCart={this.removeFromCartFaClose}
+            index={index}
+            subTotal={subTotal}
+            discount={discounts}
+            discountCodes={this.applydiscount}
+            cartTotal={cartTotal}
           />
         ) : null}
         {showCategoryPage ? (

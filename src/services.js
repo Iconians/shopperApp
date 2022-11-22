@@ -31,6 +31,7 @@ class ProductService {
             id: item.id,
             categories: item.categories.map((item) => item.slug),
             price: item.price.formatted_with_symbol,
+            price2: item.price.raw,
             name: item.name,
             inventory: item.inventory.available,
             desc: item.description,
