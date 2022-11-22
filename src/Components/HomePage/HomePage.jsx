@@ -53,13 +53,37 @@ class HomePage extends React.Component {
     );
   }
 
-  updatCartIcon = () => {
+  updatCartIcon = (qty) => {
     const { cartItems } = this.state;
     let newQty = 0;
     const updatedNum = cartItems.map((product) => product.qty + newQty);
+    // console.log(cartItems, updatedNum);
     this.setState({
-      numberOfCartItems: updatedNum.reduce((accum, val) => accum + val, 1),
+      numberOfCartItems: updatedNum.reduce((accum, val) => accum + val, qty),
     });
+  };
+
+  updatProductQty = ({ target: { name, value, id } }) => {
+    const { products, cartItems } = this.state;
+    if (name === "productQty") {
+      const findProduct = products.filter((product) => product.id === id);
+      parseInt(value) === 0
+        ? (findProduct[0].qty = parseInt(value) + 1)
+        : (findProduct[0].qty = parseInt(value));
+    } else {
+      const findProduct = cartItems.filter((product) => product.id === id);
+      const findProductInProducts = products.filter(
+        (product) => product.id === id
+      );
+      findProduct[0].qty = parseInt(value);
+      if (parseInt(value) === 0) {
+        findProductInProducts[0].qty = parseInt(value) + 1;
+      }
+      this.updatCartIcon(0);
+      if (parseInt(value) === 0) {
+        this.removeFromCart(id);
+      }
+    }
   };
 
   addToCart = ({ target: { id } }) => {
@@ -84,7 +108,26 @@ class HomePage extends React.Component {
         cartItems: updateProduct,
       });
     }
-    this.updatCartIcon();
+    this.updatCartIcon(selectedProduct[0].qty);
+  };
+
+  removeFromCart = (id) => {
+    const { cartItems } = this.state;
+    let newCartList = cartItems.filter((product) => product.id !== id);
+    this.setState({
+      cartItems: newCartList,
+    });
+    console.log(newCartList, cartItems);
+    this.updatCartIcon(-1);
+  };
+
+  removeFromCartFaClose = ({ target: { id } }) => {
+    const { cartItems } = this.state;
+    let newCartList = cartItems.filter((product) => product.id !== id);
+    this.setState({
+      cartItems: cartItems === 1 ? [] : newCartList,
+    });
+    this.updatCartIcon(-1);
   };
 
   searchProducts = ({ target: { value } }) => {
@@ -249,25 +292,6 @@ class HomePage extends React.Component {
             ) : (
               <div className="loading-div">...Loading</div>
             )}
-            {showCategoryPage ? (
-              <CategoryPage
-                products={selectedCategory}
-                showCategoryPage={showCategoryPage}
-                handleClose={this.handleCategoryModalClose}
-                openItemModal={this.openItemModal}
-                title={selectedCategoryName}
-                addToCart={this.addToCart}
-              />
-            ) : null}
-            {showItemPage ? (
-              <ItemPage
-                product={selectedProduct}
-                showItemPage={showItemPage}
-                handleClose={this.handleItmeModalClose}
-                addToCart={this.addToCart}
-              />
-            ) : null}
-            {signin ? <AccountForms /> : null}
           </div>
         ) : null}
 
@@ -276,8 +300,30 @@ class HomePage extends React.Component {
             products={cartItems}
             closeCartPage={this.closeCartPage}
             openItemPage={this.openItemModal}
+            updateQty={this.updatProductQty}
+            removeFromCart={this.removeFromCartFaClose}
           />
         ) : null}
+        {showCategoryPage ? (
+          <CategoryPage
+            products={selectedCategory}
+            showCategoryPage={showCategoryPage}
+            handleClose={this.handleCategoryModalClose}
+            openItemModal={this.openItemModal}
+            title={selectedCategoryName}
+            addToCart={this.addToCart}
+          />
+        ) : null}
+        {showItemPage ? (
+          <ItemPage
+            product={selectedProduct}
+            showItemPage={showItemPage}
+            handleClose={this.handleItmeModalClose}
+            addToCart={this.addToCart}
+            updateQty={this.updatProductQty}
+          />
+        ) : null}
+        {signin ? <AccountForms /> : null}
       </section>
     );
   }

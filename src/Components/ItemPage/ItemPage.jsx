@@ -1,6 +1,12 @@
 import React from "react";
 import "./ItemPage.css";
-const ItemPage = ({ product, showItemPage, handleClose, addToCart }) => {
+const ItemPage = ({
+  product,
+  showItemPage,
+  handleClose,
+  addToCart,
+  updateQty,
+}) => {
   const showHideClass = showItemPage ? "display-block" : "display-none";
 
   return (
@@ -28,6 +34,18 @@ const ItemPage = ({ product, showItemPage, handleClose, addToCart }) => {
                   value="Add To Cart"
                   onClick={addToCart}
                 />
+              </div>
+              <div>
+                <select
+                  name="productQty"
+                  id={product.id}
+                  onChange={updateQty}
+                  defaultValue="0"
+                >
+                  {[...Array(10).keys()].map((item) => (
+                    <option value={item}>{item}</option>
+                  ))}
+                </select>
               </div>
               <input type="button" value="Close" onClick={handleClose} />
             </div> // make change quantity select field

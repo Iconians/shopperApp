@@ -1,7 +1,7 @@
 import React from "react";
 import CartItem from "../CartItem/CartItem.jsx";
 
-const Cart = ({ products, openItemPage }) => {
+const Cart = ({ products, openItemPage, updateQty, removeFromCart }) => {
   const headings = [
     { h4: "product", class: "product-h4" },
     { h4: "Price", class: "price-h4" },
@@ -27,13 +27,14 @@ const Cart = ({ products, openItemPage }) => {
               id={item.id}
               img={item.img}
               openItemPage={openItemPage}
+              removeFromCart={removeFromCart}
             />
             <select
-              name={item.name}
+              name="cartQty"
               id={item.id}
-              className="quantity"
-              // onChange={updateQuantity}
-              defaultValue="0"
+              className=""
+              onChange={updateQty}
+              defaultValue={item.qty}
             >
               {[...Array(10).keys()].map((item) => (
                 <option value={item}>{item}</option>
