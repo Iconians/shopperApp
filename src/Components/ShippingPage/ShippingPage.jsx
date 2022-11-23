@@ -1,34 +1,32 @@
-import { faClose } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import ProgressBar from "../../ProgressBar/ProgressBar";
-import Cart from "../Cart/Cart";
+import ShippingComponent from "../ShippingComponent/ShippingComponent";
 import SummaryComponent from "../SummaryComponent/SummaryComponent";
 
-const CartPage = ({
-  products,
-  closeCartPage,
-  openItemPage,
-  updateQty,
-  removeFromCart,
+const ShippingPage = ({
   index,
+  handleInputChange,
+  expressShipping,
+  standardShipping,
+  errorMsg,
   subTotal,
   discount,
   discountCodes,
   cartTotal,
+  cartItems,
   tax,
   shipping,
   next,
 }) => {
   return (
-    <div className="cart-wrapper">
-      {<FontAwesomeIcon icon={faClose} onClick={closeCartPage} />}
+    <div>
       <ProgressBar index={index} />
-      <Cart
-        products={products}
-        openItemPage={openItemPage}
-        updateQty={updateQty}
-        removeFromCart={removeFromCart}
+      <ShippingComponent
+        index={index}
+        handleInputChange={handleInputChange}
+        expressShipping={expressShipping}
+        standardShipping={standardShipping}
+        errorMsg={errorMsg}
       />
       <SummaryComponent
         index={index}
@@ -39,9 +37,10 @@ const CartPage = ({
         tax={tax}
         shipping={shipping}
         next={next}
+        cartItems={cartItems}
       />
     </div>
   );
 };
 
-export default CartPage;
+export default ShippingPage;

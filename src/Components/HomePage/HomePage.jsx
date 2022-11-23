@@ -8,19 +8,50 @@ import AccountForms from "../AccountForms/AccountForms";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CartPage from "../CartPage/CartPage";
+import {
+  emailValidation,
+  passwordValidation,
+  onlyTextValidation,
+  onlyNumberValidation,
+  cardNumberValidation,
+  securityCodeValidation,
+} from "../../validations";
+import { AMERICANEXPRESS, OTHERCARDS } from "../../constants";
+import ShippingComponent from "../ShippingComponent/ShippingComponent";
+import ShippingPage from "../ShippingPage/ShippingPage";
+
+const INIT_FORM = {
+  email: "",
+  password: "",
+  confirmPassword: "",
+  firstName: "",
+  surName: "",
+  postal: "",
+};
+
+const SIGN_IN_FORM = {
+  email: "",
+  password: "",
+};
 
 const products = new ProductService();
 class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      signin: false,
+      formData: INIT_FORM,
+      signInFormData: SIGN_IN_FORM,
+      signinForm: false,
+      createAccForm: true,
       loading: false,
       products: [],
       selectedProduct: [],
       selectedCategory: [],
       cartItems: [],
       searchResults: [],
+      accounts: {},
+      formError: {},
+      shippingPageErrors: {},
       selectedCategoryName: "",
       error: false,
       showCategoryPage: false,
@@ -34,7 +65,18 @@ class HomePage extends React.Component {
         twentyoff: 20,
         fiftyoff: 50,
       },
+      shipping: {
+        shippingCost: 0,
+        shippingTitle: "Standard",
+        shippingDescription: "Delivery in 4-6 Business Days",
+      },
       cartTotal: 0,
+      forms: false,
+      isLoggedIn: false,
+      firstName: "",
+      taxRate: 0.09,
+      taxes: 0,
+      shippingPrice: 0,
     };
   }
 
@@ -65,7 +107,6 @@ class HomePage extends React.Component {
     const { cartItems } = this.state;
     let newQty = 0;
     const updatedNum = cartItems.map((product) => product.qty + newQty);
-    // console.log(cartItems, updatedNum);
     this.setState({
       numberOfCartItems: updatedNum.reduce((accum, val) => accum + val, qty),
     });
@@ -151,7 +192,7 @@ class HomePage extends React.Component {
   };
 
   updateSummaryDetails = (products, num) => {
-    const { subTotal } = this.state;
+    const { subTotal, taxRate } = this.state;
     let sum = 0;
     const newItemPrice = products.map((product) => {
       const findCost = product.price2 * product.qty;
@@ -159,16 +200,23 @@ class HomePage extends React.Component {
     });
     if (num === 1) {
       const total = subTotal + newItemPrice[0];
+      const findTaxes = total * taxRate;
+      const addtaxes = findTaxes + total;
       this.setState({
         subTotal: parseFloat(total.toFixed(2)),
+        taxes: findTaxes.toFixed(2),
+        cartTotal: addtaxes.toFixed(2),
       });
     } else {
       const total = subTotal - newItemPrice[0];
+      const findTaxes = total * taxRate;
+      const addtaxes = findTaxes + total;
       this.setState({
         subTotal: sum === 0 ? sum : parseFloat(total.toFixed(2)),
+        taxes: findTaxes,
+        cartTotal: addtaxes.toFixed(2),
       });
     }
-    console.log(products, sum, newItemPrice, newItemPrice[0]);
   };
 
   searchProducts = ({ target: { value } }) => {
@@ -214,9 +262,271 @@ class HomePage extends React.Component {
     });
   };
 
+  switchForm = ({ target: { value } }) => {
+    const signIn = value;
+    if (signIn === "true") {
+      this.setState({
+        signInForm: true,
+        createAccForm: false,
+      });
+    } else {
+      this.setState({
+        signInForm: false,
+        createAccForm: true,
+      });
+    }
+  };
+
+  handleInputChange = ({ target: { name, value } }) => {
+    const { signInForm } = this.state;
+    signInForm
+      ? this.setState((prevState) => ({
+          signInFormData: {
+            ...prevState.signInFormData,
+            [name]: value,
+          },
+        }))
+      : this.setState((prevState) => ({
+          formData: {
+            ...prevState.formData,
+            [name]: value,
+          },
+        }));
+  };
+
+  confirmPasswordValidation = (value) => {
+    const password = this.state.formData.password;
+    if (value) {
+      if (value === `${password}`) {
+        return "";
+      } else {
+        return "passwords don't match";
+      }
+    } else {
+      return undefined;
+    }
+  };
+
+  handleValidations = (name, value) => {
+    const validations = {
+      email: (value) => emailValidation(value),
+      password: (value) => passwordValidation(value),
+      confirmPassword: (value) => this.confirmPasswordValidation(value),
+      firstName: (value) => onlyTextValidation(value),
+      surName: (value) => onlyTextValidation(value),
+      postal: (value) => onlyNumberValidation(value),
+    };
+
+    let setValidations = validations[name](value);
+    this.setState((prevState) => ({
+      error: {
+        ...prevState.error,
+        [`${name}Error`]: setValidations,
+      },
+    }));
+  };
+
+  checkErrors = () => {
+    const {
+      index,
+      shippingData,
+      shippingPageError,
+      paymentPageError,
+      paymentData,
+      shipping,
+    } = this.state;
+    let errorValue = {};
+    let isError = false;
+    if (index === 2) {
+      Object.keys(shippingData).forEach((val) => {
+        if (!shippingData[val].length) {
+          errorValue = { ...errorValue, [`${val}Error`]: "Required" };
+          isError = true;
+        }
+      });
+      Object.keys(shippingPageError).forEach((val) => {
+        if (shippingPageError[val].length) {
+          errorValue = { ...errorValue, [`${val}`]: "Required" };
+          isError = true;
+        }
+      });
+      if (!shipping.shippingTitle.length) {
+        errorValue = { ...errorValue, shippingOptionError: "Required" };
+        isError = true;
+      }
+      this.setState({ shippingPageError: errorValue });
+    } else if (index === 3) {
+      Object.keys(paymentData).forEach((val) => {
+        if (!paymentData[val].length) {
+          errorValue = { ...errorValue, [`${val}Error`]: "Required" };
+          isError = true;
+        }
+      });
+      Object.keys(paymentPageError).forEach((val) => {
+        if (paymentPageError[val].length) {
+          errorValue = { ...errorValue, [`${val}`]: "Required" };
+          isError = true;
+        }
+      });
+      this.setState({ paymentPageError: errorValue });
+    }
+    return isError;
+  };
+
+  handleBlur = ({ target: { name, value } }) =>
+    this.handleValidations(name, value);
+
+  checkErrorBeforeSave = () => {
+    const { formData, formError, accounts } = this.state;
+    let errorValue = {};
+    let isError = false;
+    let data = accounts;
+    let keys = Object.keys(data);
+    Object.keys(formData).forEach((val) => {
+      if (!formData[val].length) {
+        errorValue = { ...errorValue, [`${val}Error`]: "Required" };
+        isError = true;
+      }
+    });
+    Object.keys(formError).forEach((val) => {
+      if (formError[val].length) {
+        errorValue = { ...errorValue, [`${val}`]: "Required" };
+        isError = true;
+      }
+    });
+    keys.forEach((key) => {
+      let values = accounts[key];
+      if (formData.email === values.email) {
+        errorValue = {
+          ...errorValue,
+          emailError: "There is already an account with this email",
+        };
+        isError = true;
+      }
+    });
+    this.setState({ formError: errorValue });
+    return isError;
+  };
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const { formData } = this.state;
+    const checkErrors = this.checkErrorBeforeSave();
+    if (!checkErrors) {
+      this.setState((prevState) => ({
+        accounts: {
+          ...prevState.accounts,
+          [`${formData.firstName}account`]: formData,
+        },
+        formData: INIT_FORM,
+        firstName: formData.firstName,
+        isLoggedIn: true,
+        forms: false,
+      }));
+    }
+  };
+
+  checkErrorsBeforeSignIn = () => {
+    const { signInFormData, accounts } = this.state;
+    let errorValue = {};
+    let isError = false;
+    let data = accounts;
+    let keys = Object.keys(data);
+    if (keys.length) {
+      keys.forEach((key) => {
+        let values = accounts[key];
+        if (
+          signInFormData.email === values.email &&
+          signInFormData.password === values.password
+        ) {
+        } else {
+          errorValue = {
+            ...errorValue,
+            emailError: "No account with this email",
+          };
+          isError = true;
+        }
+      });
+    } else {
+      errorValue = { ...errorValue, emailError: "No account with this email" };
+      isError = true;
+    }
+    this.setState({ formError: errorValue });
+    return isError;
+  };
+
+  handleSignIn = (e) => {
+    const { signInFormData, accounts } = this.state;
+    e.preventDefault();
+    const checkErrors = this.checkErrorsBeforeSignIn();
+    if (!checkErrors) {
+      let data = accounts;
+      let keys = Object.keys(data);
+      keys.forEach((key) => {
+        let values = accounts[key];
+        if (signInFormData.email === values.email) {
+          this.setState({
+            firstName: values.firstName,
+            isLoggedIn: true,
+            forms: false,
+          });
+        }
+      });
+    }
+  };
+
+  signOut = () => {
+    this.setState({
+      isLoggedIn: false,
+    });
+  };
+
+  expressShipping = ({ target: { name } }) => {
+    const { subTotal } = this.state;
+    this.handleValidations(name);
+    this.setState({
+      shipping: {
+        shippingCost: 5,
+        shippingTitle: "Express",
+        shippingDescription: "Delivery in 1-3 Business Days",
+      },
+    });
+    this.updateTotal(subTotal, 5, 0);
+  };
+
+  standardShipping = ({ target: { name } }) => {
+    const { subTotal } = this.state;
+    this.handleValidations(name);
+    if (subTotal >= 40) {
+      this.setState({
+        shipping: {
+          shippingCost: 0,
+          shippingTitle: "Standard",
+          shippingDescription: "Delivery in 4-6 Business Days",
+        },
+      });
+      this.updateTotal(subTotal, 0, 0);
+    } else if (subTotal < 40) {
+      this.setState({
+        shipping: {
+          shippingCost: 10,
+          shippingTitle: "Standard",
+          shippingDescription: "Delivery in 4-6 Business Days",
+        },
+      });
+      this.updateTotal(subTotal, 10, 0);
+    }
+  };
+
   openAccountForm = () => {
     this.setState({
-      signin: true,
+      forms: true,
+    });
+  };
+
+  closeAccountForm = () => {
+    this.setState({
+      forms: false,
     });
   };
 
@@ -257,6 +567,63 @@ class HomePage extends React.Component {
     this.setState({ index: 0 });
   };
 
+  nextPage = () => {
+    const { index, cartTotal } = this.state;
+    const checkErrors = this.checkErrors();
+    if (index === 1) {
+      if (cartTotal === 0) {
+        this.setState({ cartPageError: true });
+      } else {
+        this.setState({ index: 2 });
+      }
+    } else if (index === 2) {
+      if (!checkErrors) {
+        this.setState({ index: 3 });
+        this.paymentFieldsFilledOut();
+      }
+    } else if (index === 3) {
+      if (!checkErrors) {
+        this.setState({
+          index: 4,
+        });
+      }
+    }
+  };
+
+  backPage = () => {
+    const { index } = this.state;
+    if (index === 2) {
+      this.setState({ cartIndex: 1 });
+    } else if (index === 3) {
+      this.setState({
+        cartIndex: 2,
+        // disableBtn: false,
+      });
+    }
+    // else {
+    //   this.setState({
+    //     cartIndex: 0,
+    //     cartData: INIT_CARTDATA,
+    //     subTotal: 0,
+    //     total: 0,
+    //     discounts: 0,
+    //     cardType: "",
+    //     shipping: {
+    //       shippingCost: 0,
+    //       shippingTitle: "",
+    //       ShippingDescription: "",
+    //     },
+    //     paymentData: {
+    //       cardName: "",
+    //       cardNumber: "",
+    //       cardMonth: "",
+    //       cardYear: "",
+    //       cardCvv: "",
+    //     },
+    //   });
+    // }
+  };
+
   render() {
     const navHeadings = [
       {
@@ -281,13 +648,22 @@ class HomePage extends React.Component {
       selectedCategoryName,
       numberOfCartItems,
       cartItems,
-      signin,
+      forms,
       index,
       searchResults,
       subTotal,
       discounts,
       discountCodes,
       cartTotal,
+      signInForm,
+      createAccForm,
+      formData,
+      signInFormData,
+      isLoggedIn,
+      firstName,
+      taxes,
+      shippingPrice,
+      shippingPageErrors,
     } = this.state;
     return (
       <section>
@@ -303,7 +679,16 @@ class HomePage extends React.Component {
                 onChange={this.searchProducts}
               />
             </div>
-            <div onClick={this.openAccountForm}>Login/Signup</div>
+            {isLoggedIn ? (
+              <div>
+                <select name="loggedInName" id="" onChange={this.signOut}>
+                  <option value="loggedIn">{`Welcome ${firstName}`}</option>
+                  <option value="logOut">Log out</option>
+                </select>
+              </div>
+            ) : (
+              <div onClick={this.openAccountForm}>Login/Signup</div>
+            )}
             <div>
               <ul className="nav-list">
                 {navHeadings.map((heading) => (
@@ -382,6 +767,27 @@ class HomePage extends React.Component {
             discount={discounts}
             discountCodes={this.applydiscount}
             cartTotal={cartTotal}
+            tax={taxes}
+            shipping={shippingPrice}
+            cartItems={cartItems}
+            next={this.nextPage}
+          />
+        ) : null}
+        {index === 2 ? (
+          <ShippingPage
+            index={index}
+            handleInputChange={this.handleInputChange}
+            expressShipping={this.expressShipping}
+            standardShipping={this.standardShipping}
+            errorMsg={shippingPageErrors}
+            subTotal={subTotal}
+            discount={discounts}
+            discountCodes={this.applydiscount}
+            cartTotal={cartTotal}
+            tax={taxes}
+            shipping={shippingPrice}
+            next={this.nextPage}
+            cartItems={cartItems}
           />
         ) : null}
         {showCategoryPage ? (
@@ -403,7 +809,21 @@ class HomePage extends React.Component {
             updateQty={this.updatProductQty}
           />
         ) : null}
-        {signin ? <AccountForms /> : null}
+        {forms ? (
+          <AccountForms
+            forms={forms}
+            closeAccForm={this.closeAccountForm}
+            signIn={signInForm}
+            createAcc={createAccForm}
+            signInFormData={signInFormData}
+            formData={formData}
+            switchForm={this.switchForm}
+            handleInputChange={this.handleInputChange}
+            handleBlur={this.handleBlur}
+            handleSignIn={this.handleSignIn}
+            handleSubmit={this.handleSubmit}
+          />
+        ) : null}
       </section>
     );
   }

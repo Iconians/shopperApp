@@ -12,11 +12,12 @@ const SummaryComponent = ({
   shipping,
   subTotal,
   disableBtn,
-  cartData,
   shippingData,
   cardType,
   cardNumber,
   discountCodes,
+  tax,
+  cartItems,
 }) => {
   const buttonValue = () => {
     if (index === 1) {
@@ -33,6 +34,12 @@ const SummaryComponent = ({
       className2: "subtotal-price-div price-div",
       p: "Cart Subtotal:",
       propValue: subTotal,
+    },
+    {
+      className1: "tax-div",
+      className2: "price-div tax-price-div",
+      p: "Taxes",
+      propValue: tax,
     },
     {
       className1: "shipping-div",
@@ -62,7 +69,7 @@ const SummaryComponent = ({
       {index === 1 ? (
         <PromoCode discountCode={discountCodes} />
       ) : (
-        <CartSummary cartData={cartData} />
+        <CartSummary cartData={cartItems} />
       )}
       <hr />
       <div className="totals-div">
@@ -71,17 +78,14 @@ const SummaryComponent = ({
             <div className="total-headings">
               <p>{title.p}</p>
             </div>
-            <div className={title.className2}>
-              {title.propValue === subTotal
-                ? `$${title.propValue}`
-                : title.propValue}
-            </div>
+            <div className={title.className2}>{`$${title.propValue}`}</div>
           </div>
         ))}
       </div>
       <hr />
-      {/* {index === 2 ? <ShippingSummary shippingData={shippingData} /> : null}
-      {index >= 2 ? <ShippingMethod shipping={shipping} /> : null}
+      {/* {index === 2 ? <ShippingSummary shippingData={shippingData} /> : null} */}
+
+      {/* {index >= 2 ? <ShippingMethod shipping={shipping} /> : null}
       {index === 3 ? (
         <PaymentSummary
           cardType={cardType}
