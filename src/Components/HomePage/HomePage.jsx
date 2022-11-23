@@ -51,7 +51,7 @@ class HomePage extends React.Component {
       searchResults: [],
       accounts: {},
       formError: {},
-      shippingPageErrors: {},
+      shippingPageError: {},
       selectedCategoryName: "",
       error: false,
       showCategoryPage: false,
@@ -60,6 +60,13 @@ class HomePage extends React.Component {
       index: 0,
       subTotal: 0,
       discounts: 0,
+      cartTotal: 0,
+      forms: false,
+      isLoggedIn: false,
+      firstName: "",
+      taxRate: 0.09,
+      taxes: 0,
+      shippingPrice: 0,
       discountCodes: {
         fiveoff: 5,
         twentyoff: 20,
@@ -70,13 +77,19 @@ class HomePage extends React.Component {
         shippingTitle: "Standard",
         shippingDescription: "Delivery in 4-6 Business Days",
       },
-      cartTotal: 0,
-      forms: false,
-      isLoggedIn: false,
-      firstName: "",
-      taxRate: 0.09,
-      taxes: 0,
-      shippingPrice: 0,
+      shippingData: {
+        addressTitle: "",
+        name: "",
+        address: "",
+        zip: "",
+        country: "",
+        city: "",
+        state: "",
+        cellAreaCode: "",
+        cellNum: "",
+        phoneAreaCode: "",
+        phoneNum: "",
+      },
     };
   }
 
@@ -326,6 +339,60 @@ class HomePage extends React.Component {
     }));
   };
 
+  shippingHandleValidations = (name, value) => {
+    const { index } = this.state;
+    if (index === 2) {
+      const shippingValidations = {
+        addressTitle: (value) => onlyTextValidation(value),
+        name: (value) => onlyTextValidation(value),
+        address: () => "",
+        zip: (value) => onlyNumberValidation(value),
+        country: () => "",
+        city: () => "",
+        state: () => "",
+        cellAreaCode: (value) => onlyNumberValidation(value),
+        cellNum: (value) => onlyNumberValidation(value),
+        phoneAreaCode: (value) => onlyNumberValidation(value),
+        phoneNum: (value) => onlyNumberValidation(value),
+        shippingOption: () => "",
+      };
+
+      let shippingErrortext = shippingValidations[name](value);
+      this.setState((prevState) => ({
+        shippingPageError: {
+          ...prevState.shippingPageError,
+          [`${name}Error`]: shippingErrortext,
+        },
+      }));
+    } else {
+      const paymentValidations = {
+        cardName: (value) => onlyTextValidation(value),
+        cardNumber: (value) => cardNumberValidation(value),
+        cardMonth: () => "",
+        cardYear: () => "",
+        cardCvv: (value) =>
+          securityCodeValidation(3, value) || onlyNumberValidation(value),
+      };
+
+      if (name === "cardNumber") {
+        const card = this.findDebitCardType(value);
+        const length = this.cardLength(card);
+        this.setState({
+          cardType: card,
+          maxLength: length,
+        });
+      }
+      let paymentErrortext = paymentValidations[name](value);
+      this.paymentFieldsFilledOut();
+      this.setState((prevState) => ({
+        paymentPageError: {
+          ...prevState.paymentPageError,
+          [`${name}Error`]: paymentErrortext,
+        },
+      }));
+    }
+  };
+
   checkErrors = () => {
     const {
       index,
@@ -483,7 +550,7 @@ class HomePage extends React.Component {
 
   expressShipping = ({ target: { name } }) => {
     const { subTotal } = this.state;
-    this.handleValidations(name);
+    this.shippingHandleValidations(name);
     this.setState({
       shipping: {
         shippingCost: 5,
@@ -496,7 +563,7 @@ class HomePage extends React.Component {
 
   standardShipping = ({ target: { name } }) => {
     const { subTotal } = this.state;
-    this.handleValidations(name);
+    this.shippingHandleValidations(name);
     if (subTotal >= 40) {
       this.setState({
         shipping: {
