@@ -16,6 +16,7 @@ const AccountForms = ({
   handleBlur,
   handleSignIn,
   handleSubmit,
+  formError,
 }) => {
   const showHideClass = forms ? "display-block" : "display-none";
   const inputData = [
@@ -133,6 +134,7 @@ const AccountForms = ({
               error={error}
               handleInputChange={handleInputChange}
               handleBlur={handleBlur}
+              formError={formError}
             />
           ) : (
             <CreateAccForm
@@ -141,6 +143,7 @@ const AccountForms = ({
               error={error}
               handleInputChange={handleInputChange}
               handleBlur={handleBlur}
+              formError={formError}
             />
           )}
           {signIn ? (

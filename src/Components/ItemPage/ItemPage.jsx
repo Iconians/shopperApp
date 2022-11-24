@@ -6,9 +6,11 @@ const ItemPage = ({
   handleClose,
   addToCart,
   updateQty,
+  inventoryError,
+  quantity,
 }) => {
   const showHideClass = showItemPage ? "display-block" : "display-none";
-
+  const errorMsg = quantity.map((value) => value.id === product.id);
   return (
     <div className={`modal ${showHideClass}`}>
       <div>
@@ -28,6 +30,9 @@ const ItemPage = ({
                 <div>{product.desc.replace("<p>", "").replace("</p>", "")}</div>
               </div>
               <div>
+                {inventoryError ? (
+                  <div>{`low quantity ${errorMsg.value}`}</div>
+                ) : null}
                 <input
                   id={product.id}
                   type="button"
@@ -43,15 +48,19 @@ const ItemPage = ({
                   defaultValue="0"
                 >
                   {[...Array(10).keys()].map((item) => (
-                    <option value={item}>{item}</option>
+                    <option value={item} key={item}>
+                      {item}
+                    </option>
                   ))}
                 </select>
               </div>
               <input type="button" value="Close" onClick={handleClose} />
-            </div> // make change quantity select field
+            </div>
           ))
         ) : (
-          <div>...Loading</div>
+          <div>
+            ...Somthing broke on our end please refresh page and try again
+          </div>
         )}
       </div>
     </div>

@@ -6,7 +6,7 @@ import InputBase from "../InputBase/InputBase";
 const SignInForm = ({
   signInInputData,
   signInForm,
-  error,
+  formError,
   handleInputChange,
   handleBlur,
 }) => {
@@ -22,8 +22,10 @@ const SignInForm = ({
     <label className="form-label" htmlFor={item.name} key={item.key}>
       <div className="grid-div">
         {item.label}
-        {error && error[item.error] && error[item.error].length > 1 ? (
-          <div className="error">{error[item.error]}</div>
+        {formError &&
+        formError[item.error] &&
+        formError[item.error].length > 1 ? (
+          <div className="error">{formError[item.error]}</div>
         ) : null}
       </div>
       <InputBase

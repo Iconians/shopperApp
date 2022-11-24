@@ -3,7 +3,7 @@ import InputBase from "../InputBase/InputBase";
 import "./ShippingComponent.css";
 
 const ShippingComponent = ({
-  index,
+  backPage,
   handleInputChange,
   standardShipping,
   expressShipping,
@@ -246,7 +246,7 @@ const ShippingComponent = ({
           </div>
         </div>
         <div className="back-btn">
-          <InputBase type="submit" value="Back To Cart" onClick={index} />
+          <InputBase type="submit" value="Back To Cart" onClick={backPage} />
         </div>
       </div>
     </div>

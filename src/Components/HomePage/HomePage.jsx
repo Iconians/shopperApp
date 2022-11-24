@@ -17,8 +17,6 @@ import {
   securityCodeValidation,
 } from "../../validations";
 import { AMERICANEXPRESS, OTHERCARDS } from "../../constants";
-import ShippingComponent from "../ShippingComponent/ShippingComponent";
-import ShippingPage from "../ShippingPage/ShippingPage";
 
 const INIT_FORM = {
   email: "",
@@ -49,9 +47,11 @@ class HomePage extends React.Component {
       selectedCategory: [],
       cartItems: [],
       searchResults: [],
+      quantity: [],
       accounts: {},
       formError: {},
       shippingPageError: {},
+      paymentPageError: {},
       selectedCategoryName: "",
       error: false,
       showCategoryPage: false,
@@ -66,7 +66,11 @@ class HomePage extends React.Component {
       firstName: "",
       taxRate: 0.09,
       taxes: 0,
-      shippingPrice: 0,
+      disableBtn: true,
+      cardType: "",
+      maxLength: OTHERCARDS.length,
+      cartPageError: true,
+      inventoryError: false,
       discountCodes: {
         fiveoff: 5,
         twentyoff: 20,
@@ -89,6 +93,13 @@ class HomePage extends React.Component {
         cellNum: "",
         phoneAreaCode: "",
         phoneNum: "",
+      },
+      paymentData: {
+        cardName: "",
+        cardNumber: "",
+        cardMonth: "",
+        cardYear: "",
+        cardCvv: "",
       },
     };
   }
@@ -115,6 +126,15 @@ class HomePage extends React.Component {
       }
     );
   }
+
+  disableBtn = (array) => {
+    const { index } = this.state;
+    if (array.length === 0) {
+      this.setState({ disableBtn: true });
+    } else if (index === 3 && array.length === 5) {
+      this.setState({ disableBtn: false });
+    }
+  };
 
   updatCartIcon = (qty) => {
     const { cartItems } = this.state;
@@ -153,12 +173,26 @@ class HomePage extends React.Component {
     const findIndex = products.findIndex((product) => product.id === id);
     const selectedProduct = products.slice(findIndex, findIndex + 1);
     const addToCurrentArr = selectedProduct.concat(cartItems);
-    const quantity = cartItems.some((item) => item.id === id);
-    if (!quantity) {
+    const cartQuantity = cartItems.some((item) => item.id === id);
+    const selectedCartProduct = cartItems.length
+      ? cartItems.filter((product) => product.id === id)
+      : [{ qty: 1 }];
+    const inventoryLimit =
+      selectedProduct[0].inventory === selectedCartProduct[0].qty;
+    console.log(
+      cartItems.length ? selectedCartProduct[0].qty : null,
+      selectedProduct[0].inventory
+    );
+    const outOfStock = selectedProduct[0].inventory > 0;
+    if (!cartQuantity && outOfStock) {
+      console.log("if");
       this.setState({
         cartItems: addToCurrentArr,
+        cartPageError: false,
+        disableBtn: false,
       });
-    } else {
+    } else if (outOfStock && !inventoryLimit) {
+      console.log("else if");
       const updateProduct = cartItems.map((product) => {
         if (product.id === id) {
           const newQty = product.qty + 1;
@@ -169,6 +203,14 @@ class HomePage extends React.Component {
       this.setState({
         cartItems: updateProduct,
       });
+    } else {
+      this.setState((prevState) => ({
+        quantity: [
+          ...prevState.quantity,
+          { id: addToCurrentArr[0].id, value: addToCurrentArr[0].inventory },
+        ],
+        inventoryError: true,
+      }));
     }
     this.updatCartIcon(selectedProduct[0].qty);
     this.updateSummaryDetails(selectedProduct, 1);
@@ -259,15 +301,15 @@ class HomePage extends React.Component {
   };
 
   updateTotal = (subtotal, price, codeValue) => {
-    const { discounts } = this.state;
+    const { discounts, taxes } = this.state;
     let sum = 0;
     if (codeValue === 0) {
       let interger1 = Math.max(subtotal - discounts);
-      let total = Math.max(interger1 + price);
+      let total = Math.max(interger1 + price + Number.parseFloat(taxes));
       sum = total;
     } else {
       let interger1 = Math.max(subtotal - codeValue);
-      let total = Math.max(interger1 + price);
+      let total = Math.max(interger1 + price + Number.parseFloat(taxes));
       sum = total;
     }
     this.setState({
@@ -290,7 +332,8 @@ class HomePage extends React.Component {
     }
   };
 
-  handleInputChange = ({ target: { name, value } }) => {
+  formHandleInputChange = ({ target: { name, value } }) => {
+    console.log(name, value);
     const { signInForm } = this.state;
     signInForm
       ? this.setState((prevState) => ({
@@ -305,6 +348,81 @@ class HomePage extends React.Component {
             [name]: value,
           },
         }));
+  };
+
+  handleInputChange = ({ target: { name, value } }) => {
+    const { index } = this.state;
+    this.shippingHandleValidations(name, value);
+    if (index === 2) {
+      this.setState((prevState) => ({
+        shippingData: {
+          ...prevState.shippingData,
+          [name]: value,
+        },
+      }));
+    } else if (name === "cardNumber") {
+      let mask = value.split(" ").join("");
+      if (mask.length) {
+        mask = mask.match(new RegExp(".{1,4}", "g")).join(" ");
+        this.setState((prevState) => ({
+          paymentData: {
+            ...prevState.paymentData,
+            [name]: mask,
+          },
+        }));
+      } else {
+        this.setState((prevState) => ({
+          paymentData: {
+            ...prevState.paymentData,
+            [name]: "",
+          },
+        }));
+      }
+    } else {
+      this.setState((prevState) => ({
+        paymentData: {
+          ...prevState.paymentData,
+          [name]: value,
+        },
+      }));
+    }
+  };
+
+  paymentFieldsFilledOut = () => {
+    const { paymentData } = this.state;
+    let array = [];
+    Object.values(paymentData).forEach((val) => {
+      if (val === "") {
+        return false;
+      } else {
+        array.push(1);
+      }
+    });
+    if (array.length === 0 || array.length === 5) {
+      this.disableBtn(array);
+    }
+  };
+
+  findDebitCardType = (cardNumber) => {
+    const regexPattern = {
+      MASTERCARD: /^5[1-5][0-9]{1,}|^2[2-7][0-9]{1,}$/,
+      VISA: /^4[0-9]{2,}$/,
+      AMERICAN_EXPRESS: /^3[47][0-9]{5,}$/,
+      DISCOVER: /^6(?:011|5[0-9]{2})[0-9]{3,}$/,
+    };
+    for (const card in regexPattern) {
+      if (cardNumber.replace(/[^\d]/g, "").match(regexPattern[card]))
+        return card;
+    }
+    return "";
+  };
+
+  cardLength = (cardType) => {
+    if (cardType === "AMERICAN_EXPRESS") {
+      return AMERICANEXPRESS.length;
+    } else {
+      return OTHERCARDS.length;
+    }
   };
 
   confirmPasswordValidation = (value) => {
@@ -635,14 +753,10 @@ class HomePage extends React.Component {
   };
 
   nextPage = () => {
-    const { index, cartTotal } = this.state;
+    const { index } = this.state;
     const checkErrors = this.checkErrors();
     if (index === 1) {
-      if (cartTotal === 0) {
-        this.setState({ cartPageError: true });
-      } else {
-        this.setState({ index: 2 });
-      }
+      this.setState({ index: 2 });
     } else if (index === 2) {
       if (!checkErrors) {
         this.setState({ index: 3 });
@@ -660,35 +774,33 @@ class HomePage extends React.Component {
   backPage = () => {
     const { index } = this.state;
     if (index === 2) {
-      this.setState({ cartIndex: 1 });
+      this.setState({ index: 1 });
     } else if (index === 3) {
       this.setState({
-        cartIndex: 2,
-        // disableBtn: false,
+        index: 2,
+        disableBtn: false,
+      });
+    } else {
+      this.setState({
+        index: 0,
+        subTotal: 0,
+        total: 0,
+        discounts: 0,
+        cardType: "",
+        shipping: {
+          shippingCost: 0,
+          shippingTitle: "",
+          ShippingDescription: "",
+        },
+        paymentData: {
+          cardName: "",
+          cardNumber: "",
+          cardMonth: "",
+          cardYear: "",
+          cardCvv: "",
+        },
       });
     }
-    // else {
-    //   this.setState({
-    //     cartIndex: 0,
-    //     cartData: INIT_CARTDATA,
-    //     subTotal: 0,
-    //     total: 0,
-    //     discounts: 0,
-    //     cardType: "",
-    //     shipping: {
-    //       shippingCost: 0,
-    //       shippingTitle: "",
-    //       ShippingDescription: "",
-    //     },
-    //     paymentData: {
-    //       cardName: "",
-    //       cardNumber: "",
-    //       cardMonth: "",
-    //       cardYear: "",
-    //       cardCvv: "",
-    //     },
-    //   });
-    // }
   };
 
   render() {
@@ -720,7 +832,6 @@ class HomePage extends React.Component {
       searchResults,
       subTotal,
       discounts,
-      discountCodes,
       cartTotal,
       signInForm,
       createAccForm,
@@ -729,8 +840,18 @@ class HomePage extends React.Component {
       isLoggedIn,
       firstName,
       taxes,
-      shippingPrice,
-      shippingPageErrors,
+      shipping,
+      shippingPageError,
+      formError,
+      shippingData,
+      cardType,
+      disableBtn,
+      paymentData,
+      cartPageError,
+      paymentPageError,
+      maxLength,
+      inventoryError,
+      quantity,
     } = this.state;
     return (
       <section>
@@ -796,13 +917,18 @@ class HomePage extends React.Component {
                         id={item.id}
                         openItemPage={this.openItemModal}
                         addToCart={this.addToCart}
+                        inventoryError={inventoryError}
+                        quantity={quantity}
                       />
                     }
                   </div>
                 ))
               ) : (
                 products.map((item) => (
-                  <div className={`${item.categories[0]}-container`}>
+                  <div
+                    className={`${item.categories[0]}-container`}
+                    key={item.id}
+                  >
                     {
                       <ItemComponent
                         img={item.img}
@@ -811,6 +937,8 @@ class HomePage extends React.Component {
                         id={item.id}
                         openItemPage={this.openItemModal}
                         addToCart={this.addToCart}
+                        inventoryError={inventoryError}
+                        quantity={quantity}
                       />
                     }
                   </div>
@@ -821,7 +949,6 @@ class HomePage extends React.Component {
             )}
           </div>
         ) : null}
-
         {index === 1 ? (
           <CartPage
             products={cartItems}
@@ -829,32 +956,28 @@ class HomePage extends React.Component {
             openItemPage={this.openItemModal}
             updateQty={this.updatProductQty}
             removeFromCart={this.removeFromCartFaClose}
+            cartError={cartPageError}
             index={index}
             subTotal={subTotal}
             discount={discounts}
             discountCodes={this.applydiscount}
             cartTotal={cartTotal}
             tax={taxes}
-            shipping={shippingPrice}
+            shipping={shipping}
             cartItems={cartItems}
             next={this.nextPage}
-          />
-        ) : null}
-        {index === 2 ? (
-          <ShippingPage
-            index={index}
+            shippingErrorMsg={shippingPageError}
+            backPage={this.backPage}
             handleInputChange={this.handleInputChange}
             expressShipping={this.expressShipping}
             standardShipping={this.standardShipping}
-            errorMsg={shippingPageErrors}
-            subTotal={subTotal}
-            discount={discounts}
-            discountCodes={this.applydiscount}
-            cartTotal={cartTotal}
-            tax={taxes}
-            shipping={shippingPrice}
-            next={this.nextPage}
-            cartItems={cartItems}
+            shippingData={shippingData}
+            cardType={cardType}
+            disableBtn={disableBtn}
+            cardNumber={paymentData}
+            paymentErrorMsg={paymentPageError}
+            maxLength={maxLength}
+            paymentData={paymentData}
           />
         ) : null}
         {showCategoryPage ? (
@@ -885,10 +1008,11 @@ class HomePage extends React.Component {
             signInFormData={signInFormData}
             formData={formData}
             switchForm={this.switchForm}
-            handleInputChange={this.handleInputChange}
+            handleInputChange={this.formHandleInputChange}
             handleBlur={this.handleBlur}
             handleSignIn={this.handleSignIn}
             handleSubmit={this.handleSubmit}
+            formError={formError}
           />
         ) : null}
       </section>

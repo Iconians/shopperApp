@@ -8,7 +8,7 @@ const CartSummary = ({ cartData }) => {
   return (
     <div className="cart-summary-parent-div">
       {array.map((item) => (
-        <div className="cart-item" key={item.key}>
+        <div className="cart-item" key={item.id}>
           <div className="cart-details">
             <div>{item.name}</div>
             <div>Qty {item.value}</div>

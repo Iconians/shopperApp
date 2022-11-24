@@ -49,7 +49,7 @@ const ProgressBar = ({ index }) => {
       <div className={"step-item " + (index === 3 ? "active " : null)}>
         <div
           className={
-            "step-counter " + (index === 3 ? "step-counter-active " : null)
+            "step-counter " + (index === 4 ? "step-counter-active " : null)
           }
         ></div>
         <div className="step-name ">Confirmation</div>

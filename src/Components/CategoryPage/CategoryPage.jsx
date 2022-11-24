@@ -9,6 +9,8 @@ const CategoryPage = ({
   openItemModal,
   title,
   addToCart,
+  inventoryError,
+  quantity,
 }) => {
   const showHideClass = showCategoryPage ? "display-block" : "display-none";
 
@@ -28,6 +30,8 @@ const CategoryPage = ({
                 id={item.id}
                 openItemPage={openItemModal}
                 addToCart={addToCart}
+                inventoryError={inventoryError}
+                quantity={quantity}
               />
             </div>
           ))}

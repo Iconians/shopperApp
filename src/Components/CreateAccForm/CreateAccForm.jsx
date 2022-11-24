@@ -6,7 +6,7 @@ import InputBase from "../InputBase/InputBase";
 const createAccForm = ({
   inputData,
   formData,
-  error,
+  formError,
   handleBlur,
   handleInputChange,
 }) => {
@@ -22,8 +22,10 @@ const createAccForm = ({
     <label htmlFor={item.name} className="form-label" key={item.key}>
       <div className="grid-div">
         {item.label}
-        {error && error[item.error] && error[item.error].length > 1 ? (
-          <div className="error">{error[item.error]}</div>
+        {formError &&
+        formError[item.error] &&
+        formError[item.error].length > 1 ? (
+          <div className="error">{formError[item.error]}</div>
         ) : null}
       </div>
       <InputBase
