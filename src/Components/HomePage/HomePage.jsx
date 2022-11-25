@@ -823,17 +823,6 @@ class HomePage extends React.Component {
       (products) =>
         (tempArr = [...tempArr, { id: products.id, qty: products.qty }])
     );
-    const cart = tempArr.forEach((product) => {
-      const remainingProducts = products.map((item) => {
-        if (item.id === product.id) {
-          return item.inventory - product.qty;
-        } else {
-          return item;
-        }
-      });
-      return remainingProducts;
-    });
-    console.log(cart);
     // this.state({
 
     // })
