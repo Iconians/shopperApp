@@ -54,6 +54,7 @@ class HomePage extends React.Component {
       paymentPageError: {},
       selectedCategoryName: "",
       error: false,
+      loadingErrorMsg: "",
       showCategoryPage: false,
       showItemPage: false,
       numberOfCartItems: 0,
@@ -146,53 +147,105 @@ class HomePage extends React.Component {
   };
 
   updatProductQty = ({ target: { name, value, id } }) => {
-    const { products, cartItems } = this.state;
-    if (name === "productQty") {
-      const findProduct = products.filter((product) => product.id === id);
+    const { products, cartItems, quantity } = this.state;
+    const findProduct = products.filter((product) => product.id === id);
+    const findCartProduct = cartItems.filter((product) => product.id === id);
+    const productsInventoryLimit = findProduct[0].inventory >= parseInt(value);
+    const ProductsNotOutOfStock = findProduct[0].inventory > 0;
+    const CartInventoryLimit = findProduct[0].inventory >= parseInt(value);
+    const CartNotOutOfStock = findCartProduct.length
+      ? findCartProduct[0].inventory > 0
+      : null;
+    if (
+      name === "productQty" &&
+      productsInventoryLimit &&
+      ProductsNotOutOfStock
+    ) {
       parseInt(value) === 0
         ? (findProduct[0].qty = parseInt(value) + 1)
         : (findProduct[0].qty = parseInt(value));
-    } else {
-      const findProduct = cartItems.filter((product) => product.id === id);
+      this.setState({ inventoryError: false });
+    } else if (CartInventoryLimit && CartNotOutOfStock) {
+      console.log("if else");
       const findProductInProducts = products.filter(
         (product) => product.id === id
       );
-      findProduct[0].qty = parseInt(value);
+      findCartProduct[0].qty = parseInt(value);
       if (parseInt(value) === 0) {
         findProductInProducts[0].qty = parseInt(value) + 1;
       }
+      this.setState({ inventoryError: false });
       this.updatCartIcon(0);
       if (parseInt(value) === 0) {
         this.removeFromCart(id);
       }
+    } else {
+      if (name === "productQty") {
+        const isInQuantity = quantity.filter(
+          (product) => product.id === findProduct[0].id
+        );
+        if (!isInQuantity.length) {
+          this.setState((prevState) => ({
+            quantity: [
+              ...prevState.quantity,
+              { id: findProduct[0].id, value: findProduct[0].inventory },
+            ],
+            inventoryError: true,
+          }));
+        } else {
+          this.setState({ inventoryError: true });
+        }
+      } else {
+        const isInQuantity = quantity.filter(
+          (product) => product.id === findProduct[0].id
+        );
+        if (!isInQuantity.length) {
+          this.setState((prevState) => ({
+            quantity: [
+              ...prevState.quantity,
+              { id: findProduct[0].id, value: findProduct[0].inventory },
+            ],
+            inventoryError: true,
+          }));
+        } else {
+          this.setState({ inventoryError: true });
+        }
+      }
+    }
+    if (
+      !productsInventoryLimit &&
+      !ProductsNotOutOfStock &&
+      !CartInventoryLimit &&
+      !CartNotOutOfStock
+    ) {
+      this.setState({ addToCartError: true });
     }
   };
 
   addToCart = ({ target: { id } }) => {
-    const { products, cartItems } = this.state;
+    const { products, cartItems, quantity } = this.state;
     const findIndex = products.findIndex((product) => product.id === id);
     const selectedProduct = products.slice(findIndex, findIndex + 1);
     const addToCurrentArr = selectedProduct.concat(cartItems);
     const cartQuantity = cartItems.some((item) => item.id === id);
+    console.log(cartQuantity, selectedProduct);
     const selectedCartProduct = cartItems.length
       ? cartItems.filter((product) => product.id === id)
       : [{ qty: 1 }];
-    const inventoryLimit =
-      selectedProduct[0].inventory === selectedCartProduct[0].qty;
-    console.log(
-      cartItems.length ? selectedCartProduct[0].qty : null,
-      selectedProduct[0].inventory
-    );
-    const outOfStock = selectedProduct[0].inventory > 0;
-    if (!cartQuantity && outOfStock) {
-      console.log("if");
+    const inventoryLimit = selectedCartProduct.length
+      ? selectedProduct[0].inventory === selectedCartProduct[0].qty
+      : true;
+    const notOutOfStock = selectedProduct[0].inventory > 0;
+    console.log(cartQuantity, notOutOfStock, inventoryLimit);
+    if (!cartQuantity && notOutOfStock) {
       this.setState({
         cartItems: addToCurrentArr,
         cartPageError: false,
         disableBtn: false,
       });
-    } else if (outOfStock && !inventoryLimit) {
-      console.log("else if");
+      this.updatCartIcon(selectedProduct[0].qty);
+      this.updateSummaryDetails(selectedProduct, 1);
+    } else if (cartQuantity && notOutOfStock && !inventoryLimit) {
       const updateProduct = cartItems.map((product) => {
         if (product.id === id) {
           const newQty = product.qty + 1;
@@ -203,17 +256,28 @@ class HomePage extends React.Component {
       this.setState({
         cartItems: updateProduct,
       });
+      this.updatCartIcon(selectedProduct[0].qty);
+      this.updateSummaryDetails(selectedProduct, 1);
     } else {
-      this.setState((prevState) => ({
-        quantity: [
-          ...prevState.quantity,
-          { id: addToCurrentArr[0].id, value: addToCurrentArr[0].inventory },
-        ],
-        inventoryError: true,
-      }));
+      const isInQuantity = quantity.filter(
+        (product) => product.id === selectedProduct[0].id
+      );
+      if (!isInQuantity.length) {
+        this.setState((prevState) => ({
+          quantity: [
+            ...prevState.quantity,
+            {
+              id: addToCurrentArr[0].id,
+              value: addToCurrentArr[0].inventory,
+              reqVal: 1,
+            },
+          ],
+          inventoryError: true,
+        }));
+      } else {
+        this.setState({ inventoryError: true });
+      }
     }
-    this.updatCartIcon(selectedProduct[0].qty);
-    this.updateSummaryDetails(selectedProduct, 1);
   };
 
   removeFromCart = (id) => {
@@ -752,6 +816,29 @@ class HomePage extends React.Component {
     this.setState({ index: 0 });
   };
 
+  resetState = () => {
+    const { cartItems, products } = this.state;
+    let tempArr = [];
+    cartItems.map(
+      (products) =>
+        (tempArr = [...tempArr, { id: products.id, qty: products.qty }])
+    );
+    const cart = tempArr.forEach((product) => {
+      const remainingProducts = products.map((item) => {
+        if (item.id === product.id) {
+          return item.inventory - product.qty;
+        } else {
+          return item;
+        }
+      });
+      return remainingProducts;
+    });
+    console.log(cart);
+    // this.state({
+
+    // })
+  };
+
   nextPage = () => {
     const { index } = this.state;
     const checkErrors = this.checkErrors();
@@ -784,9 +871,12 @@ class HomePage extends React.Component {
       this.setState({
         index: 0,
         subTotal: 0,
-        total: 0,
+        cartTotal: 0,
         discounts: 0,
         cardType: "",
+        numberOfCartItems: 0,
+        taxes: 0,
+        cartItems: this.resetState(),
         shipping: {
           shippingCost: 0,
           shippingTitle: "",
@@ -852,6 +942,7 @@ class HomePage extends React.Component {
       maxLength,
       inventoryError,
       quantity,
+      error,
     } = this.state;
     return (
       <section>
@@ -903,7 +994,7 @@ class HomePage extends React.Component {
             </div>
           </nav>
         </div>
-        {index === 0 ? (
+        {index === 0 && !error ? (
           <div className="main-body">
             {!loading ? (
               searchResults[0] ? (
@@ -948,8 +1039,10 @@ class HomePage extends React.Component {
               <div className="loading-div">...Loading</div>
             )}
           </div>
+        ) : index === 0 ? (
+          <div>Something Broke Please try to Refresh The Page</div>
         ) : null}
-        {index === 1 ? (
+        {index >= 1 ? (
           <CartPage
             products={cartItems}
             closeCartPage={this.closeCartPage}
@@ -978,6 +1071,8 @@ class HomePage extends React.Component {
             paymentErrorMsg={paymentPageError}
             maxLength={maxLength}
             paymentData={paymentData}
+            inventoryError={inventoryError}
+            quantity={quantity}
           />
         ) : null}
         {showCategoryPage ? (
@@ -988,6 +1083,8 @@ class HomePage extends React.Component {
             openItemModal={this.openItemModal}
             title={selectedCategoryName}
             addToCart={this.addToCart}
+            inventoryError={inventoryError}
+            quantity={quantity}
           />
         ) : null}
         {showItemPage ? (
@@ -997,6 +1094,8 @@ class HomePage extends React.Component {
             handleClose={this.handleItmeModalClose}
             addToCart={this.addToCart}
             updateQty={this.updatProductQty}
+            inventoryError={inventoryError}
+            quantity={quantity}
           />
         ) : null}
         {forms ? (

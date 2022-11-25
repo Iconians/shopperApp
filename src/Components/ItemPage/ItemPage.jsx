@@ -10,7 +10,10 @@ const ItemPage = ({
   quantity,
 }) => {
   const showHideClass = showItemPage ? "display-block" : "display-none";
-  const errorMsg = quantity.map((value) => value.id === product.id);
+  const errorMsg = quantity.filter((value) => value.id === product[0].id);
+  const isAddCartEror = errorMsg.length
+    ? errorMsg[0].value > errorMsg[0].reqVal
+    : null;
   return (
     <div className={`modal ${showHideClass}`}>
       <div>
@@ -30,8 +33,20 @@ const ItemPage = ({
                 <div>{product.desc.replace("<p>", "").replace("</p>", "")}</div>
               </div>
               <div>
-                {inventoryError ? (
-                  <div>{`low quantity ${errorMsg.value}`}</div>
+                {inventoryError &&
+                !isAddCartEror &&
+                errorMsg.length &&
+                errorMsg[0].value > 0 ? (
+                  <div>{`low quantity ${errorMsg[0].value} available`}</div>
+                ) : null}
+                {inventoryError &&
+                !isAddCartEror &&
+                errorMsg.length &&
+                errorMsg[0].value === 0 ? (
+                  <div>{`Out Of Stock`}</div>
+                ) : null}
+                {inventoryError && isAddCartEror ? (
+                  <div>Failed to add to cart</div>
                 ) : null}
                 <input
                   id={product.id}

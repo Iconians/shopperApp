@@ -1,7 +1,14 @@
 import React from "react";
 import CartItem from "../CartItem/CartItem.jsx";
 
-const Cart = ({ products, openItemPage, updateQty, removeFromCart }) => {
+const Cart = ({
+  products,
+  openItemPage,
+  updateQty,
+  removeFromCart,
+  inventoryError,
+  quantity,
+}) => {
   const headings = [
     { h4: "product", class: "product-h4", key: 113 },
     { h4: "Price", class: "price-h4", key: 243 },
@@ -28,6 +35,8 @@ const Cart = ({ products, openItemPage, updateQty, removeFromCart }) => {
               img={item.img}
               openItemPage={openItemPage}
               removeFromCart={removeFromCart}
+              inventoryError={inventoryError}
+              quantity={quantity}
             />
             <select
               name="cartQty"

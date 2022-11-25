@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import ProgressBar from "../../ProgressBar/ProgressBar";
 import Cart from "../Cart/Cart";
+import ConfirmationComponent from "../ConfirmationComponent/ConfirmationComponent";
 import PaymentComponent from "../PaymentComponent/PaymentComponent";
 import ShippingComponent from "../ShippingComponent/ShippingComponent";
 import SummaryComponent from "../SummaryComponent/SummaryComponent";
@@ -34,6 +35,8 @@ const CartPage = ({
   cardType,
   maxLength,
   paymentData,
+  inventoryError,
+  quantity,
 }) => {
   return (
     <div className="cart-wrapper">
@@ -45,6 +48,8 @@ const CartPage = ({
           openItemPage={openItemPage}
           updateQty={updateQty}
           removeFromCart={removeFromCart}
+          inventoryError={inventoryError}
+          quantity={quantity}
         />
       ) : null}
       {index === 2 ? (
@@ -69,6 +74,7 @@ const CartPage = ({
           disableBtn={disableBtn}
         />
       ) : null}
+      {index === 4 ? <ConfirmationComponent backPage={backPage} /> : null}
       <SummaryComponent
         index={index}
         subTotal={subTotal}
