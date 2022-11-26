@@ -19,7 +19,7 @@ const ItemComponent = ({
     ? errorMsg[0].qty === errorMsg[0].value
     : null;
   return (
-    <div>
+    <div className="product-card-parent-div">
       <div className="product-card" id={id} onClick={openItemPage}>
         <img src={img} alt="" id={id} />
         <div id={id}>{title}</div>
@@ -41,7 +41,7 @@ const ItemComponent = ({
           <div>Failed to add to cart</div>
         ) : null}
       </div>
-      <div>
+      <div className="btn-div">
         <input type="button" value="Add To Cart" id={id} onClick={addToCart} />
       </div>
     </div>

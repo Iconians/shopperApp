@@ -818,14 +818,17 @@ class HomePage extends React.Component {
 
   resetState = () => {
     const { cartItems, products } = this.state;
-    let tempArr = [];
-    cartItems.map(
-      (products) =>
-        (tempArr = [...tempArr, { id: products.id, qty: products.qty }])
-    );
-    // this.state({
-
-    // })
+    const updateProducts = products.map((product) => {
+      const cartItem = cartItems.filter((item) => item.id === product.id);
+      if (cartItem.length ? cartItem[0].id === product.id : false) {
+        return { ...product, inventory: product.inventory - cartItem[0].qty };
+      }
+      return product;
+    });
+    this.setState({
+      products: updateProducts,
+      cartItems: [],
+    });
   };
 
   nextPage = () => {
@@ -865,7 +868,6 @@ class HomePage extends React.Component {
         cardType: "",
         numberOfCartItems: 0,
         taxes: 0,
-        cartItems: this.resetState(),
         shipping: {
           shippingCost: 0,
           shippingTitle: "",
@@ -880,6 +882,7 @@ class HomePage extends React.Component {
         },
       });
     }
+    this.resetState();
   };
 
   render() {
@@ -935,7 +938,7 @@ class HomePage extends React.Component {
     } = this.state;
     return (
       <section>
-        <div>
+        <div className="navbar-parent-div">
           <nav className="nav-bar">
             <div className="brand-name">
               <h3>Clothing Essentials</h3>
@@ -955,7 +958,9 @@ class HomePage extends React.Component {
                 </select>
               </div>
             ) : (
-              <div onClick={this.openAccountForm}>Login/Signup</div>
+              <div onClick={this.openAccountForm}>
+                <p>Login/Signup</p>
+              </div>
             )}
             <div>
               <ul className="nav-list">

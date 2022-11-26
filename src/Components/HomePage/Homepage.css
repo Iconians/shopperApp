@@ -1,3 +1,13 @@
+body {
+  background-image: url("../../../public/woodenpic.jpg");
+}
+
+.navbar-parent-div {
+  background-color: saddlebrown;
+  color: white;
+  margin-bottom: 50px;
+}
+
 .nav-bar {display: flex;}
 .nav-list {
   display: flex;
@@ -31,20 +41,21 @@
 
 .cart-icon {
   margin-top: 20px;
-  font-size: 20px;
-  color: lightgray;
+  font-size: 28px;
+  color: black;
 }
 
 .main-body {
-  display: grid;
-    grid-template-columns: repeat(5, 1fr);
+display: flex;
+flex-wrap: wrap;
 }
 
 .specials-container,
-.hat-container,
+.hats-container,
 .shirts-container,
 .belts-container,
 .pants-container,
-.footwear-container {
+.foot-wear-container {
 padding: 20px;
+margin: auto;
 }

@@ -1,9 +1,30 @@
+.product-card-parent-div {
+  padding: 20px;
+  background: whitesmoke;
+  width: 300px;
+  box-shadow: 0 22px 34px rgb(22 28 45 / 10%);
+  border-radius: 40px;
+  height: 300px;
+}
+
 .product-card {
-  height: 200px;
+  height: 260px;
   cursor: pointer;
 }
 
 .product-card > img {
-  width: 150px;
-  height: 150px
+  width: 200px;
+  height: 200px;
+}
+
+
+.btn-div > input {
+  width: 200px;
+  height: 35px;
+  font-weight: 700;
+  color: white;
+  border-color: #24e0ed;
+  background-color: #24a0ed;
+  border-radius: 20px;
+  text-transform: uppercase;
 }
