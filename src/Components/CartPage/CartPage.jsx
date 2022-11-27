@@ -42,7 +42,7 @@ const CartPage = ({
     <div className="cart-wrapper">
       {<FontAwesomeIcon icon={faClose} onClick={closeCartPage} />}
       <ProgressBar index={index} />
-      {index === 1 ? (
+      {index === 4 ? (
         <Cart
           products={products}
           openItemPage={openItemPage}
@@ -52,7 +52,7 @@ const CartPage = ({
           quantity={quantity}
         />
       ) : null}
-      {index === 2 ? (
+      {index === 5 ? (
         <ShippingComponent
           backPage={backPage}
           handleInputChange={handleInputChange}
@@ -61,7 +61,7 @@ const CartPage = ({
           errorMsg={shippingErrorMsg}
         />
       ) : null}
-      {index === 3 ? (
+      {index === 6 ? (
         <PaymentComponent
           backPage={backPage}
           total={cartTotal}
@@ -74,7 +74,7 @@ const CartPage = ({
           disableBtn={disableBtn}
         />
       ) : null}
-      {index === 4 ? <ConfirmationComponent backPage={backPage} /> : null}
+      {index === 7 ? <ConfirmationComponent backPage={backPage} /> : null}
       <SummaryComponent
         index={index}
         subTotal={subTotal}

@@ -1,28 +1,89 @@
-.modal {
-  position: fixed; 
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width:100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
+.page-header {margin-bottom: 50px;}
+
+.form-parent-div {
+  margin: auto;
+  height: fit-content;
+  width: fit-content;
+  margin-top: 50px;
+  background-color: white;
+  padding: 20px;
 }
 
-.modal-main {
-  position:fixed;
-  background: white;
-  width: 100%;
-  height: 100%;
-  top:50%;
-  left:50%;
-  transform: translate(-50%,-50%);
+.radio-buttons-div, .signin-form-div {
+  width: fit-content;
+  margin: auto;
+  background-color: white;
 }
 
-.display-block {
-  display: block;
+.radio-buttons-div, .form-div {
+  width: 450px;
 }
 
-.display-none {
-  display: none;
+.form-label {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 20px;
+}
+
+.form-label > input {
+  width: 90%;
+  height: 25px;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 28px;
+  top: 31px;
+  font-size: 20px;
+  color: grey;
+}
+
+.form-label > p {
+  font-size: 12px;
+  width: 90%;
+  margin: auto;
+}
+
+.grid-div {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+}
+
+.error {
+  font-size: 12px;
+  color: red;
+}
+
+.btn-inputs {
+  width: 50%;
+  margin: auto;
+  padding: 10px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+.save-btn {
+  margin-top: 20px;
+  background-color: saddlebrown; 
+  cursor: pointer; 
+  font-weight: bold;
+}
+
+.cancel-div {
+  margin-top: 30px;
+}
+
+.cancel-div > input {
+  width: 25%;
+  background-color: red;
+  border: none;
+  height: 32px;
+  border-radius: 6px;
+  color: white;
+  font-weight: bold;
 }

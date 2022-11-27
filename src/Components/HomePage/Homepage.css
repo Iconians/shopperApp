@@ -22,6 +22,23 @@ body {
   padding: 10px;
 }
 
+.nav-login-btn-div { margin-top: 16px;}
+.nav-login-btn-div > button {
+  background-color: saddlebrown;
+  border: none;
+  font-size: 16px;
+  color: white;
+}
+
+.logged-in-name {
+  margin-top: 20px;
+  border: none;
+  color: white;
+  background-color: saddlebrown;
+  font-size: 15px;
+  outline: none;
+}
+
 .nav-list > li {
   margin-right: 10px;
   cursor: pointer;
@@ -58,4 +75,9 @@ flex-wrap: wrap;
 .foot-wear-container {
 padding: 20px;
 margin: auto;
+}
+
+.home-error-div {
+  color: white;
+  font-weight: 900;
 }

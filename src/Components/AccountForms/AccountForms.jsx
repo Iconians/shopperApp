@@ -2,6 +2,7 @@ import React from "react";
 import SignInForm from "../SignInForm/SignInForm";
 import CreateAccForm from "../CreateAccForm/CreateAccForm";
 import InputBase from "../InputBase/InputBase";
+import "./AccountForms.css";
 
 const AccountForms = ({
   signIn,
@@ -10,7 +11,6 @@ const AccountForms = ({
   signInFormData,
   error,
   closeAccForm,
-  forms,
   switchForm,
   handleInputChange,
   handleBlur,
@@ -18,7 +18,6 @@ const AccountForms = ({
   handleSubmit,
   formError,
 }) => {
-  const showHideClass = forms ? "display-block" : "display-none";
   const inputData = [
     {
       label: "Your Email Address *",
@@ -92,81 +91,86 @@ const AccountForms = ({
       key: "8",
     },
   ];
-
+  console.log(signIn, createAcc);
   return (
-    <div className={`page-header modal modal-main ${showHideClass}`}>
-      <div className="radio-buttons-div">
-        <label
-          htmlFor="signin"
-          className={signIn === true ? "active" : "inactive"}
-        >
-          <input
-            onChange={switchForm}
-            value="true"
-            checked={signIn === true && createAcc === false}
-            type="radio"
-            name="formChoice"
-            id="signIn"
-          />
-          SIGN IN
-        </label>
-        <label
-          htmlFor="create-account"
-          className={createAcc === true ? "active" : "inactive"}
-        >
-          <input
-            onChange={switchForm}
-            value="false"
-            checked={createAcc === true && signIn === false}
-            type="radio"
-            name="formChoice"
-            id="createAccount"
-          />
-          CREATE ACCOUNT
-        </label>
-      </div>
-      <div id="signinForm" className="signin-form-div">
-        <form onSubmit={signIn ? handleSignIn : handleSubmit}>
-          {signIn ? (
-            <SignInForm
-              signInInputData={signInInputData}
-              signInForm={signInFormData}
-              error={error}
-              handleInputChange={handleInputChange}
-              handleBlur={handleBlur}
-              formError={formError}
+    <div className={"page-header"}>
+      <div className="form-parent-div">
+        <div className="radio-buttons-div">
+          <label
+            htmlFor="signin"
+            className={signIn === true ? "active" : "inactive"}
+          >
+            <input
+              onChange={switchForm}
+              value="true"
+              checked={signIn === true && createAcc === false}
+              type="radio"
+              name="formChoice"
+              id="signIn"
             />
-          ) : (
-            <CreateAccForm
-              inputData={inputData}
-              formData={formData}
-              error={error}
-              handleInputChange={handleInputChange}
-              handleBlur={handleBlur}
-              formError={formError}
+            SIGN IN
+          </label>
+          <label
+            htmlFor="create-account"
+            className={createAcc === true ? "active" : "inactive"}
+          >
+            <input
+              onChange={switchForm}
+              value="false"
+              checked={createAcc === true && signIn === false}
+              type="radio"
+              name="formChoice"
+              id="createAccount"
             />
-          )}
-          {signIn ? (
-            <div className="submit-div">
-              <InputBase
-                type="submit"
-                value="SIGN IN"
-                class="btn-inputs save-btn"
+            CREATE ACCOUNT
+          </label>
+        </div>
+        <div id="signinForm" className="signin-form-div">
+          <form
+            className="form-div"
+            onSubmit={signIn ? handleSignIn : handleSubmit}
+          >
+            {signIn ? (
+              <SignInForm
+                signInInputData={signInInputData}
+                signInForm={signInFormData}
+                // error={error}
+                handleInputChange={handleInputChange}
+                handleBlur={handleBlur}
+                formError={formError}
               />
-            </div>
-          ) : (
-            <div className="submit-div">
-              <InputBase
-                type="submit"
-                value="Create Account"
-                class="btn-inputs save-btn"
+            ) : (
+              <CreateAccForm
+                inputData={inputData}
+                formData={formData}
+                // error={error}
+                handleInputChange={handleInputChange}
+                handleBlur={handleBlur}
+                formError={formError}
               />
+            )}
+            {signIn ? (
+              <div className="submit-div">
+                <InputBase
+                  type="submit"
+                  value="SIGN IN"
+                  className="btn-inputs save-btn"
+                />
+              </div>
+            ) : (
+              <div className="submit-div">
+                <InputBase
+                  type="submit"
+                  value="Create Account"
+                  className="btn-inputs save-btn"
+                />
+              </div>
+            )}
+            <div className="cancel-div">
+              <input type="button" value="Cancel" onClick={closeAccForm} />
             </div>
-          )}
-          <div className="cancel-div">
-            <input type="button" value="Cancel" onClick={closeAccForm} />
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );

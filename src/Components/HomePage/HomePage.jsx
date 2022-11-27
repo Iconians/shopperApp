@@ -39,8 +39,8 @@ class HomePage extends React.Component {
     this.state = {
       formData: INIT_FORM,
       signInFormData: SIGN_IN_FORM,
-      signinForm: false,
-      createAccForm: true,
+      signInForm: true,
+      createAccForm: false,
       loading: false,
       products: [],
       selectedProduct: [],
@@ -48,7 +48,6 @@ class HomePage extends React.Component {
       cartItems: [],
       searchResults: [],
       quantity: [],
-      accounts: {},
       formError: {},
       shippingPageError: {},
       paymentPageError: {},
@@ -72,6 +71,16 @@ class HomePage extends React.Component {
       maxLength: OTHERCARDS.length,
       cartPageError: true,
       inventoryError: false,
+      accounts: {
+        testAccount: {
+          confirmPassword: "T@st1970",
+          email: "test@test.com",
+          firstName: "firstName",
+          password: "T@st1970",
+          postal: "95674",
+          surName: "sureName",
+        },
+      },
       discountCodes: {
         fiveoff: 5,
         twentyoff: 20,
@@ -417,7 +426,7 @@ class HomePage extends React.Component {
   handleInputChange = ({ target: { name, value } }) => {
     const { index } = this.state;
     this.shippingHandleValidations(name, value);
-    if (index === 2) {
+    if (index === 5) {
       this.setState((prevState) => ({
         shippingData: {
           ...prevState.shippingData,
@@ -514,8 +523,8 @@ class HomePage extends React.Component {
 
     let setValidations = validations[name](value);
     this.setState((prevState) => ({
-      error: {
-        ...prevState.error,
+      formError: {
+        ...prevState.formError,
         [`${name}Error`]: setValidations,
       },
     }));
@@ -670,7 +679,7 @@ class HomePage extends React.Component {
         formData: INIT_FORM,
         firstName: formData.firstName,
         isLoggedIn: true,
-        forms: false,
+        index: 0,
       }));
     }
   };
@@ -717,7 +726,7 @@ class HomePage extends React.Component {
           this.setState({
             firstName: values.firstName,
             isLoggedIn: true,
-            forms: false,
+            index: 0,
           });
         }
       });
@@ -769,13 +778,13 @@ class HomePage extends React.Component {
 
   openAccountForm = () => {
     this.setState({
-      forms: true,
+      index: 3,
     });
   };
 
   closeAccountForm = () => {
     this.setState({
-      forms: false,
+      index: 0,
     });
   };
 
@@ -800,16 +809,16 @@ class HomePage extends React.Component {
     this.setState({
       selectedCategory: productItem,
       selectedCategoryName: id.toUpperCase(),
-      showCategoryPage: true,
+      index: 1,
     });
   };
 
   handleCategoryModalClose = () => {
-    this.setState({ showCategoryPage: false });
+    this.setState({ index: 0 });
   };
 
   openCartPage = () => {
-    this.setState({ index: 1 });
+    this.setState({ index: 4 });
   };
 
   closeCartPage = () => {
@@ -834,17 +843,17 @@ class HomePage extends React.Component {
   nextPage = () => {
     const { index } = this.state;
     const checkErrors = this.checkErrors();
-    if (index === 1) {
-      this.setState({ index: 2 });
-    } else if (index === 2) {
+    if (index === 4) {
+      this.setState({ index: 5 });
+    } else if (index === 5) {
       if (!checkErrors) {
-        this.setState({ index: 3 });
+        this.setState({ index: 6 });
         this.paymentFieldsFilledOut();
       }
-    } else if (index === 3) {
+    } else if (index === 6) {
       if (!checkErrors) {
         this.setState({
-          index: 4,
+          index: 7,
         });
       }
     }
@@ -852,11 +861,11 @@ class HomePage extends React.Component {
 
   backPage = () => {
     const { index } = this.state;
-    if (index === 2) {
-      this.setState({ index: 1 });
-    } else if (index === 3) {
+    if (index === 5) {
+      this.setState({ index: 4 });
+    } else if (index === 6) {
       this.setState({
-        index: 2,
+        index: 5,
         disableBtn: false,
       });
     } else {
@@ -952,14 +961,19 @@ class HomePage extends React.Component {
             </div>
             {isLoggedIn ? (
               <div>
-                <select name="loggedInName" id="" onChange={this.signOut}>
+                <select
+                  className="logged-in-name"
+                  name="loggedInName"
+                  id=""
+                  onChange={this.signOut}
+                >
                   <option value="loggedIn">{`Welcome ${firstName}`}</option>
                   <option value="logOut">Log out</option>
                 </select>
               </div>
             ) : (
-              <div onClick={this.openAccountForm}>
-                <p>Login/Signup</p>
+              <div onClick={this.openAccountForm} className="nav-login-btn-div">
+                <button onClick={this.openAccountForm}>Login/Signup</button>
               </div>
             )}
             <div>
@@ -1033,10 +1047,12 @@ class HomePage extends React.Component {
               <div className="loading-div">...Loading</div>
             )}
           </div>
-        ) : index === 0 ? (
-          <div>Something Broke Please try to Refresh The Page</div>
+        ) : index === 0 && error ? (
+          <div className="home-error-div">
+            Something Broke Please try to Refresh The Page
+          </div>
         ) : null}
-        {index >= 1 ? (
+        {index >= 4 ? (
           <CartPage
             products={cartItems}
             closeCartPage={this.closeCartPage}
@@ -1069,7 +1085,7 @@ class HomePage extends React.Component {
             quantity={quantity}
           />
         ) : null}
-        {showCategoryPage ? (
+        {index === 1 ? (
           <CategoryPage
             products={selectedCategory}
             showCategoryPage={showCategoryPage}
@@ -1081,7 +1097,7 @@ class HomePage extends React.Component {
             quantity={quantity}
           />
         ) : null}
-        {showItemPage ? (
+        {index === 2 ? (
           <ItemPage
             product={selectedProduct}
             showItemPage={showItemPage}
@@ -1092,7 +1108,7 @@ class HomePage extends React.Component {
             quantity={quantity}
           />
         ) : null}
-        {forms ? (
+        {index === 3 ? (
           <AccountForms
             forms={forms}
             closeAccForm={this.closeAccountForm}
