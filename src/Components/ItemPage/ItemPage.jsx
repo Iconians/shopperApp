@@ -2,24 +2,22 @@ import React from "react";
 import "./ItemPage.css";
 const ItemPage = ({
   product,
-  showItemPage,
   handleClose,
   addToCart,
   updateQty,
   inventoryError,
   quantity,
 }) => {
-  const showHideClass = showItemPage ? "display-block" : "display-none";
   const errorMsg = quantity.filter((value) => value.id === product[0].id);
   const isAddCartEror = errorMsg.length
     ? errorMsg[0].value > errorMsg[0].reqVal
     : null;
   return (
-    <div className={`modal ${showHideClass}`}>
+    <div className="">
       <div>
         {!undefined ? (
           product.map((product) => (
-            <div className="modal-main" key={product.id}>
+            <div className="item-page-perent-div" key={product.id}>
               <div className="img-container">
                 <img src={product.img} alt="" />
               </div>

@@ -793,12 +793,12 @@ class HomePage extends React.Component {
     const productItem = products.filter((product) => product.id === id);
     this.setState({
       selectedProduct: productItem,
-      showItemPage: true,
+      index: 2,
     });
   };
 
   handleItmeModalClose = () => {
-    this.setState({ showItemPage: false });
+    this.setState({ index: 0 });
   };
 
   openCategoryModal = ({ target: { id } }) => {
