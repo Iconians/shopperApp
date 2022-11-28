@@ -17,12 +17,14 @@ const CartItem = ({
 
   return (
     <div className="main-wrapper">
-      <FontAwesomeIcon
-        id={id}
-        icon={faClose}
-        className="close"
-        onClick={removeFromCart}
-      />
+      <div className="faclose-div">
+        <FontAwesomeIcon
+          id={id}
+          icon={faClose}
+          className="close"
+          onClick={removeFromCart}
+        />
+      </div>
       <div className="product-card" id={id} onClick={openItemPage}>
         <img src={img} alt="" id={id} />
         <div id={id}>{name}</div>

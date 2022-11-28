@@ -3,7 +3,10 @@
   display: flex;
   justify-content: space-between;
   grid-area: message-box;
+  margin-bottom: 30px;
 }
+
+.step-name {color: whitesmoke;}
 
 .step-item {
   position: relative;
@@ -50,20 +53,20 @@
   margin-bottom: 6px;
 }
 
-.step-item .step-counter-active {background-color: #505450;}
+.step-item .step-counter-active {background-color: saddlebrown;}
 
 .step-item.active {
   font-weight: bold;
 }
 
 .step-item.completed .step-counter {
-  background-color: #505450;
+  background-color: saddlebrown;
 }
 
 .step-item.completed::after {
   position: absolute;
   content: "";
-  border-bottom: 10px solid #505450;
+  border-bottom: 10px solid saddlebrown;
   width: 100%;
   top: 16px;
   left: 50%;

@@ -1,0 +1,21 @@
+.shipping-component-parent-div {
+  width: 70%;
+  margin: 0 20px;
+  background-color: whitesmoke;
+  border-radius: 20px;
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-height > h5 {margin: 0;}
+
+.grid > h5 {
+  margin: 0;
+  width: fit-content;
+}
+
+.input-div {width: fit-content;}
+

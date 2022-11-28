@@ -1,0 +1,22 @@
+.cart-summary-and-totals {
+  background-color: whitesmoke;
+  border-radius: 30px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}  
+
+.code-input {
+  padding: 5px;
+}
+
+.code-input-btn {
+  width: 100px;
+  height: 30px;
+  font-weight: 700;
+  color: white;
+  border-color: #24e0ed;
+  background-color: #24a0ed;
+  border-radius: 20px;
+  text-transform: uppercase;
+  margin-left: 5px;
+}

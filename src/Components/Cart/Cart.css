@@ -1,0 +1,19 @@
+.cart {
+  display: flex;
+  flex-wrap: wrap;
+  width: 70%;
+  justify-content: space-evenly;
+}
+
+.cart-items { 
+  width: fit-content;
+  height: fit-content;
+  margin: 20px;
+  background-color: whitesmoke;
+  width: 320px;
+  border-radius: 30px;
+}
+
+.cart-items > select {width: 50px;}
+
+.cart-summary-and-totals {width: 30%;}

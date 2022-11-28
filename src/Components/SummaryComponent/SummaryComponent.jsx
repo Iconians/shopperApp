@@ -4,6 +4,7 @@ import InputBase from "../InputBase/InputBase";
 import PromoCode from "../PromoCode/PromoCode";
 import ShippingMethod from "../ShippingMethod/ShippingMethod";
 import ShippingSummary from "../ShippingSummary/ShippingSummary";
+import "./SummaryComponent.css";
 
 const SummaryComponent = ({
   index,
@@ -22,9 +23,9 @@ const SummaryComponent = ({
   cartItems,
 }) => {
   const buttonValue = () => {
-    if (index === 1) {
+    if (index === 4) {
       return "CHECKOUT";
-    } else if (index === 2) {
+    } else if (index === 5) {
       return "  NEXT  ";
     } else {
       return `PAY $${cartTotal} `;
@@ -73,7 +74,7 @@ const SummaryComponent = ({
         <h4>SUMMARY</h4>
       </div>
       <hr className="summary-hr" />
-      {index === 1 ? (
+      {index === 4 ? (
         <PromoCode discountCode={discountCodes} />
       ) : (
         <CartSummary cartData={cartItems} />
@@ -90,9 +91,9 @@ const SummaryComponent = ({
         ))}
       </div>
       <hr />
-      {index === 3 ? <ShippingSummary shippingData={shippingData} /> : null}
+      {index === 6 ? <ShippingSummary shippingData={shippingData} /> : null}
 
-      {index >= 3 ? <ShippingMethod shipping={shipping} /> : null}
+      {index >= 6 ? <ShippingMethod shipping={shipping} /> : null}
       {/* {index === 4 ? (
         <PaymentSummary
           cardType={cardType}
@@ -103,7 +104,7 @@ const SummaryComponent = ({
 
       <div className="btn-div">
         {error ? <p>select items to checkout</p> : null}
-        {index === 4 ? null : (
+        {index === 7 ? null : (
           <InputBase
             className={
               "submit-btn " + (disableBtn ? "submit-btn-disabled" : null)

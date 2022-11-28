@@ -11,7 +11,7 @@ const ShippingComponent = ({
 }) => {
   const formData = [
     {
-      divClassName: "address-title-field",
+      divClassName: "address-title-field input-div",
       gridClass: "address-title-grid-spot",
       h5: "Address Title",
       name: "addressTitle",
@@ -20,7 +20,7 @@ const ShippingComponent = ({
       key: "1",
     },
     {
-      divClassName: "name-field",
+      divClassName: "name-field input-div",
       gridClass: "name-grid-spot",
       h5: "Name - Surname",
       name: "name",
@@ -29,7 +29,7 @@ const ShippingComponent = ({
       key: "2",
     },
     {
-      divClassName: "address-field",
+      divClassName: "address-field input-div",
       gridClass: "address-grid-spot",
       h5: "Your Address",
       name: "address",
@@ -38,7 +38,7 @@ const ShippingComponent = ({
       key: "3",
     },
     {
-      divClassName: "zip-code-field",
+      divClassName: "zip-code-field input-div",
       gridClass: "zip-grid-spot",
       h5: "Zip Code",
       name: "zip",

@@ -1,9 +1,5 @@
-/* .product-card {
-  height: 200px;
-  cursor: pointer;
+.faclose-div {
+  width: fit-content;
+  margin-left: 25px;
+  margin-top: 8px;
 }
-
-.product-card > img {
-  width: 150px;
-  height: 150px
-} */

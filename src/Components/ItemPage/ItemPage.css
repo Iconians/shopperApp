@@ -1,3 +1,55 @@
+.close-btn-div {
+  width: fit-content;
+  margin-left: 50px;
+}
+
+.close-btn-div > input {
+  width: 100px;
+    height: 45px;
+    color: white;
+    background-color: saddlebrown;
+    border-color: saddlebrown;
+    border-width: 5px;
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.item-page-parent-div {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: whitesmoke;
+  width: fit-content;
+  margin: auto;
+  height: 450px;
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.img-container {
+  height: fit-content;
+  margin: auto;
+}
+
 .img-container > img {
   width: 300px;
+  border-radius: 30px;
+}
+
+.description-info-div{
+  width: 320px;
+}
+
+.product-description {
+  width: 200px;
+  margin: 20px auto;
+}
+
+.select-div {
+  margin-bottom: 50px;
+}
+
+.select-div > select {
+  width: 80px;
 }
