@@ -4,7 +4,6 @@ import "./CategoryPage.css";
 
 const CategoryPage = ({
   products,
-  showCategoryPage,
   handleClose,
   openItemModal,
   title,
@@ -22,20 +21,26 @@ const CategoryPage = ({
           <h2>{title.replace("-", " ")}</h2>
         </div>
         <div className="product-container">
-          {products.map((item) => (
-            <div className={`${item.categories[0]}-container`} key={item.id}>
-              <ItemComponent
-                img={item.img}
-                title={item.name}
-                price={item.price}
-                id={item.id}
-                openItemPage={openItemModal}
-                addToCart={addToCart}
-                inventoryError={inventoryError}
-                quantity={quantity}
-              />
+          {products.length ? (
+            products.map((item) => (
+              <div className={`${item.categories[0]}-container`} key={item.id}>
+                <ItemComponent
+                  img={item.img}
+                  title={item.name}
+                  price={item.price}
+                  id={item.id}
+                  openItemPage={openItemModal}
+                  addToCart={addToCart}
+                  inventoryError={inventoryError}
+                  quantity={quantity}
+                />
+              </div>
+            ))
+          ) : (
+            <div className="broken-div">
+              Something broke please hit the back button and try again
             </div>
-          ))}
+          )}
         </div>
       </div>
     </div>

@@ -19,7 +19,11 @@
 
 
 
-.input-height > h5 {margin: 0;}
+.input-height > h5 {
+  margin: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+}
 
 .country-select-div,
 .state-select-div,
@@ -28,13 +32,19 @@
   margin: auto 0;
 }
 
+.address-grid-spot > h5,
+.name-grid-spot > h5,
+.address-grid-spot > h5,
+.zip-grid-spot > h5,
+
+
 .address-title-grid-spot > h5 {margin-right: 35px;}
 .name-grid-spot > h5 {margin-right: 11px;}
 .address-grid-spot > h5 {margin-right: 34px;}
 .zip-grid-spot > h5 {margin-right: 60px;}
-.country-select-div {margin-left: 87px;}
-.city-select-div {margin-left: 114px;}
-.state-select-div {margin-left: 107px;}
+.country-select-div {margin-left: 80px;}
+.city-select-div {margin-left: 106px;}
+.state-select-div {margin-left: 99px;}
 
 .country-select-div > select,
 .state-select-div > select,
@@ -42,21 +52,27 @@
   width: 200px;
   padding: 10px;
   border-radius: 16px;
+  border: none;
+  outline-color: lightblue;
 }
 
 .cell-area-code-input,
 .phone-area-code-input {
-  margin-left: 74px;
+  margin-left: 64px;
   margin-right: 10px;
   width: 35px;
   padding: 10px;
   border-radius: 16px;
+  border: none;
+  outline-color: lightblue;
 }
 
 .cellphone-input,
 .phone-input {
   padding: 10px;
   border-radius: 16px;
+  border: none;
+  outline-color: lightblue;
 }
 
 .input-div {width: 50%;}
@@ -64,13 +80,15 @@
   width: 90%;
   padding: 10px;
   border-radius: 16px;
+  border: none;
+  outline-color: lightblue;
 }
 
 
 .cellphone-grid-spot,
 .phone-grid-spot {flex-direction: row;}
 
-.shipping-method-div {height: 220px;}
+.shipping-method-div {height: 300px;}
 
 .standard-option > h5, p {margin: 0;}
 .standard-option > p {margin-left: 10px;}
@@ -80,19 +98,6 @@
   position: absolute;
   bottom: 20px;
   left: 88px;
-}
-
-.checkout-btn-div > input {
-  width: 255px;
-  height: 50px;
-  font-weight: 700;
-  color: white;
-  border-color: #24e0ed;
-  background-color: #24a0ed;
-  border-radius: 20px;
-  text-transform: uppercase;
-  margin-left: 5px;
-  margin-top: 20px;
 }
 
 .back-btn {

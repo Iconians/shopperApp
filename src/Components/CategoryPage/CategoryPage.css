@@ -31,3 +31,8 @@
 .img-container > img {
   width: 300px;
 }
+
+.broken-div {
+  margin: auto;
+  color: white;
+}

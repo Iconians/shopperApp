@@ -18,11 +18,13 @@ const CartItem = ({
   return (
     <div className="main-wrapper">
       <div className="faclose-div">
+        {console.log(id)}
         <FontAwesomeIcon
           id={id}
           icon={faClose}
           className="close"
           onClick={removeFromCart}
+          cursor="pointer"
         />
       </div>
       <div className="product-card" id={id} onClick={openItemPage}>

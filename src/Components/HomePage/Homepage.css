@@ -81,3 +81,14 @@ margin: auto;
   color: white;
   font-weight: 900;
 }
+
+.loading-div {
+  margin: auto;
+  color: white;
+}
+
+@media (max-width: 1090px) {
+  .search-div > input {
+    width: 90%;
+  }
+}

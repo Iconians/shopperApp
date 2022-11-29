@@ -88,8 +88,8 @@ class HomePage extends React.Component {
       },
       shipping: {
         shippingCost: 0,
-        shippingTitle: "Standard",
-        shippingDescription: "Delivery in 4-6 Business Days",
+        shippingTitle: "",
+        shippingDescription: "",
       },
       shippingData: {
         addressTitle: "",
@@ -141,7 +141,7 @@ class HomePage extends React.Component {
     const { index } = this.state;
     if (array.length === 0) {
       this.setState({ disableBtn: true });
-    } else if (index === 3 && array.length === 5) {
+    } else if (index === 6 && array.length === 5) {
       this.setState({ disableBtn: false });
     }
   };
@@ -237,7 +237,6 @@ class HomePage extends React.Component {
     const selectedProduct = products.slice(findIndex, findIndex + 1);
     const addToCurrentArr = selectedProduct.concat(cartItems);
     const cartQuantity = cartItems.some((item) => item.id === id);
-    console.log(cartQuantity, selectedProduct);
     const selectedCartProduct = cartItems.length
       ? cartItems.filter((product) => product.id === id)
       : [{ qty: 1 }];
@@ -245,7 +244,6 @@ class HomePage extends React.Component {
       ? selectedProduct[0].inventory === selectedCartProduct[0].qty
       : true;
     const notOutOfStock = selectedProduct[0].inventory > 0;
-    console.log(cartQuantity, notOutOfStock, inventoryLimit);
     if (!cartQuantity && notOutOfStock) {
       this.setState({
         cartItems: addToCurrentArr,
@@ -308,6 +306,7 @@ class HomePage extends React.Component {
     const { cartItems } = this.state;
     const newCartList = cartItems.filter((product) => product.id !== id);
     const deletedItem = cartItems.filter((product) => product.id === id);
+    console.log(id, newCartList, cartItems);
     this.setState({
       cartItems: cartItems === 1 ? [] : newCartList,
     });
@@ -532,7 +531,7 @@ class HomePage extends React.Component {
 
   shippingHandleValidations = (name, value) => {
     const { index } = this.state;
-    if (index === 2) {
+    if (index === 5) {
       const shippingValidations = {
         addressTitle: (value) => onlyTextValidation(value),
         name: (value) => onlyTextValidation(value),
@@ -595,7 +594,7 @@ class HomePage extends React.Component {
     } = this.state;
     let errorValue = {};
     let isError = false;
-    if (index === 2) {
+    if (index === 5) {
       Object.keys(shippingData).forEach((val) => {
         if (!shippingData[val].length) {
           errorValue = { ...errorValue, [`${val}Error`]: "Required" };
@@ -613,7 +612,8 @@ class HomePage extends React.Component {
         isError = true;
       }
       this.setState({ shippingPageError: errorValue });
-    } else if (index === 3) {
+    } else if (index === 6) {
+      console.log("hit");
       Object.keys(paymentData).forEach((val) => {
         if (!paymentData[val].length) {
           errorValue = { ...errorValue, [`${val}Error`]: "Required" };

@@ -22,3 +22,22 @@
   text-transform: uppercase;
   margin-left: 5px;
 }
+
+.submit-btn {
+  width: 255px;
+  height: 50px;
+  font-weight: 700;
+  color: white;
+  border-color: #24e0ed;
+  background-color: #24a0ed;
+  border-radius: 20px;
+  text-transform: uppercase;
+  margin-left: 5px;
+  margin-top: 20px;
+}
+
+.submit-btn-disabled {
+  background-color: gray;
+  border-color: gray;
+  z-index: 1000;
+}

@@ -53,3 +53,8 @@
 .select-div > select {
   width: 80px;
 }
+
+.broken-item-page {
+  margin: auto;
+  color: white;
+}

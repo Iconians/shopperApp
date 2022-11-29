@@ -77,7 +77,7 @@ const ItemPage = ({
             </div>
           ))
         ) : (
-          <div>
+          <div className="broken-item-page">
             ...Somthing broke on our end please refresh page and try again
           </div>
         )}
