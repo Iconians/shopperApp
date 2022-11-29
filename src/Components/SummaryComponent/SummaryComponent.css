@@ -3,6 +3,8 @@
   border-radius: 30px;
   margin-right: 20px;
   margin-bottom: 20px;
+  min-height: 500px;
+  position: relative;
 }  
 
 .code-input {

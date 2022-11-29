@@ -94,7 +94,7 @@ const SummaryComponent = ({
       {index === 6 ? <ShippingSummary shippingData={shippingData} /> : null}
 
       {index >= 6 ? <ShippingMethod shipping={shipping} /> : null}
-      {/* {index === 4 ? (
+      {/* {index === 7 ? (
         <PaymentSummary
           cardType={cardType}
           total={total}
@@ -102,7 +102,7 @@ const SummaryComponent = ({
         />
       ) : null} */}
 
-      <div className="btn-div">
+      <div className="checkout-btn-div">
         {error ? <p>select items to checkout</p> : null}
         {index === 7 ? null : (
           <InputBase

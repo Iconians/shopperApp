@@ -1,0 +1,73 @@
+.payment-parent-div {
+  width: 70%;
+  background-color: whitesmoke;
+  border-radius: 20px;
+  margin: 0 20px;
+  height: 646px;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.payment-flex {
+  display: flex;
+  margin: 10px 0;
+}
+
+.payment-flex > h4 {margin: 10px;}
+
+.name-div, 
+.number-div, 
+.month-div, 
+.year-div, 
+.cvv-div  {margin: auto 0;}
+
+.name-div > input,
+.number-div > input,
+.month-div select,
+.year-div > select,
+.cvv-div > input {
+  padding: 10px;
+  border-radius: 16px;
+  width: 200px;
+}
+
+.name-div {margin-left: 20px;}
+.number-div {
+  margin-left: 58px;
+  position: relative;
+}
+
+.month-div {margin-left: 93px;}
+.year-div {margin-left: 20px;}
+.cvv-div {margin-left: 128px;}
+
+.number-div > img {
+  width: 50px;
+  position: absolute;
+  right: 10px;
+  top: 3px;
+}
+
+.payment-btn-div {
+  margin-top: 50px;
+  height: 100px;
+}
+
+.payment-btn-div > input {
+  width: 255px;
+  height: 50px;
+  font-weight: 700;
+  color: white;
+  border-color: #24e0ed;
+  background-color: #24a0ed;
+  border-radius: 20px;
+  text-transform: uppercase;
+  margin-left: 5px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.payment-back-btn {
+  position: absolute;
+  bottom: 20px;
+}

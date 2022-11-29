@@ -890,8 +890,8 @@ class HomePage extends React.Component {
           cardCvv: "",
         },
       });
+      this.resetState();
     }
-    this.resetState();
   };
 
   render() {

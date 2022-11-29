@@ -1,0 +1,31 @@
+.confirmation-comp-parent-div {
+  width: 70%;
+  background-color: whitesmoke;
+  border-radius: 40px;
+  margin: 0 10px
+}
+
+.checkMark {
+  font-size: 75px;
+  color: saddlebrown;
+}
+
+.main-text-body {
+  width: 320px;
+  margin: auto;
+}
+
+.track-order-btn > input,
+.back-home-btn > input {
+  width: 255px;
+  height: 50px;
+  font-weight: 700;
+  color: white;
+  border-color: #24e0ed;
+  background-color: #24a0ed;
+  border-radius: 20px;
+  text-transform: uppercase;
+  margin-left: 5px;
+  margin-top: 20px;
+  cursor: pointer;
+}

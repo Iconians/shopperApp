@@ -11,7 +11,7 @@ const CartSummary = ({ cartData }) => {
         <div className="cart-item" key={item.id}>
           <div className="cart-details">
             <div>{item.name}</div>
-            <div>Qty {item.value}</div>
+            <div>Qty {item.qty}</div>
           </div>
           <div>{item.totalPrice}</div>
         </div>

@@ -3,19 +3,113 @@
   margin: 0 20px;
   background-color: whitesmoke;
   border-radius: 20px;
+  margin-bottom: 20px;
 }
 
-.grid {
+.grid, .flex {
   display: flex;
-  flex-direction: column;
+  margin: 20px 0;
+  margin-left: 20px;
 }
-
-.input-height > h5 {margin: 0;}
 
 .grid > h5 {
   margin: 0;
   width: fit-content;
 }
 
-.input-div {width: fit-content;}
 
+
+.input-height > h5 {margin: 0;}
+
+.country-select-div,
+.state-select-div,
+.city-select-div {    
+  height: fit-content;
+  margin: auto 0;
+}
+
+.address-title-grid-spot > h5 {margin-right: 35px;}
+.name-grid-spot > h5 {margin-right: 11px;}
+.address-grid-spot > h5 {margin-right: 34px;}
+.zip-grid-spot > h5 {margin-right: 60px;}
+.country-select-div {margin-left: 87px;}
+.city-select-div {margin-left: 114px;}
+.state-select-div {margin-left: 107px;}
+
+.country-select-div > select,
+.state-select-div > select,
+.city-select-div > select {
+  width: 200px;
+  padding: 10px;
+  border-radius: 16px;
+}
+
+.cell-area-code-input,
+.phone-area-code-input {
+  margin-left: 74px;
+  margin-right: 10px;
+  width: 35px;
+  padding: 10px;
+  border-radius: 16px;
+}
+
+.cellphone-input,
+.phone-input {
+  padding: 10px;
+  border-radius: 16px;
+}
+
+.input-div {width: 50%;}
+.input-div > input {
+  width: 90%;
+  padding: 10px;
+  border-radius: 16px;
+}
+
+
+.cellphone-grid-spot,
+.phone-grid-spot {flex-direction: row;}
+
+.shipping-method-div {height: 220px;}
+
+.standard-option > h5, p {margin: 0;}
+.standard-option > p {margin-left: 10px;}
+.standard-option > h5 {font-size: 18px;}
+
+.checkout-btn-div {
+  position: absolute;
+  bottom: 20px;
+  left: 88px;
+}
+
+.checkout-btn-div > input {
+  width: 255px;
+  height: 50px;
+  font-weight: 700;
+  color: white;
+  border-color: #24e0ed;
+  background-color: #24a0ed;
+  border-radius: 20px;
+  text-transform: uppercase;
+  margin-left: 5px;
+  margin-top: 20px;
+}
+
+.back-btn {
+  width: fit-content;
+  margin-left: 50px;
+}
+
+.back-btn > input {
+  width: 100px;
+  height: 45px;
+  color: white;
+  background-color: saddlebrown;
+  border-color: saddlebrown;
+  border-width: 5px;
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  
+}

@@ -40,15 +40,11 @@ const PaymentComponent = ({
       name: "cardMonth",
       value: "January",
       error: "cardMonthError",
+      className2: "year-div",
+      name2: "cardYear",
+      value2: "2020",
+      error2: "cardYearError",
       key: "3",
-    },
-    {
-      class: "expire-year-grid-spot",
-      className: "year-div",
-      name: "cardYear",
-      value: "2020",
-      error: "cardYearError",
-      key: "4",
     },
     {
       class: "cvv-grid-spot",
@@ -70,7 +66,7 @@ const PaymentComponent = ({
       </div>
       <div className="card-details">
         {formData.map((item) => {
-          if (item.name === "cardMonth" || item.name === "cardYear") {
+          if (item.name === "cardMonth") {
             return (
               <div
                 className={`expire-div payment-flex ${item.class}`}
@@ -86,6 +82,17 @@ const PaymentComponent = ({
                   <select name={item.name} id="" onChange={handleInputChange}>
                     <option value="select">-Select-</option>
                     <option value={item.value}>{item.value}</option>
+                  </select>
+                </div>
+                <div className={item.className2}>
+                  {errorMsg &&
+                  errorMsg[item.error2] &&
+                  errorMsg[item.error2].length > 1 ? (
+                    <div className="error">{errorMsg[item.error2]}</div>
+                  ) : null}
+                  <select name={item.name2} id="" onChange={handleInputChange}>
+                    <option value="select">-Select-</option>
+                    <option value={item.value2}>{item.value2}</option>
                   </select>
                 </div>
               </div>
