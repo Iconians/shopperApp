@@ -4,7 +4,6 @@ import MASTER_CARD_ICON from './assets/masterCard.png';
 import DISCOVER_ICON from './assets/discover.png';
 export const PRODUCTS_URL = "https://api.chec.io/v1/products";
 export const COMMERCEJS_API = process.env.REACT_APP_COMMERCEJS_API;
-console.log(COMMERCEJS_API);
 export const OTHERCARDS = [
   /[1-9]/,
   /\d/,
