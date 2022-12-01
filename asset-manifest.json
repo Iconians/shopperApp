@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/shopperApp/static/css/main.4a7f474d.css",
+    "main.js": "/shopperApp/static/js/main.6a13a0e7.js",
+    "static/js/787.d659cbbd.chunk.js": "/shopperApp/static/js/787.d659cbbd.chunk.js",
+    "static/media/woodenpic.jpg": "/shopperApp/static/media/woodenpic.a04f5e496716422af1d5.jpg",
+    "static/media/amex.png": "/shopperApp/static/media/amex.ccde3bdfd214fb1dd52a.png",
+    "static/media/visa.png": "/shopperApp/static/media/visa.65efbe1835b35a0510d0.png",
+    "static/media/discover.png": "/shopperApp/static/media/discover.521ef0656e612926112b.png",
+    "static/media/masterCard.png": "/shopperApp/static/media/masterCard.a2c9a08f323242429695.png",
+    "index.html": "/shopperApp/index.html",
+    "main.4a7f474d.css.map": "/shopperApp/static/css/main.4a7f474d.css.map",
+    "main.6a13a0e7.js.map": "/shopperApp/static/js/main.6a13a0e7.js.map",
+    "787.d659cbbd.chunk.js.map": "/shopperApp/static/js/787.d659cbbd.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4a7f474d.css",
+    "static/js/main.6a13a0e7.js"
+  ]
+}
