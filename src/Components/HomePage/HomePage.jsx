@@ -1,5 +1,5 @@
 import React from "react";
-import "./HomePage.module.css";
+import "./HomePage.css";
 
 import ProductService from "../../services";
 import CategoryPage from "../CategoryPage/CategoryPage";
