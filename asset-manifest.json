@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/shopperApp/static/css/main.4a7f474d.css",
+    "main.css": "/shopperApp/static/css/main.33a8efcc.css",
     "main.js": "/shopperApp/static/js/main.6a13a0e7.js",
     "static/js/787.d659cbbd.chunk.js": "/shopperApp/static/js/787.d659cbbd.chunk.js",
     "static/media/woodenpic.jpg": "/shopperApp/static/media/woodenpic.a04f5e496716422af1d5.jpg",
@@ -9,12 +9,12 @@
     "static/media/discover.png": "/shopperApp/static/media/discover.521ef0656e612926112b.png",
     "static/media/masterCard.png": "/shopperApp/static/media/masterCard.a2c9a08f323242429695.png",
     "index.html": "/shopperApp/index.html",
-    "main.4a7f474d.css.map": "/shopperApp/static/css/main.4a7f474d.css.map",
+    "main.33a8efcc.css.map": "/shopperApp/static/css/main.33a8efcc.css.map",
     "main.6a13a0e7.js.map": "/shopperApp/static/js/main.6a13a0e7.js.map",
     "787.d659cbbd.chunk.js.map": "/shopperApp/static/js/787.d659cbbd.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.4a7f474d.css",
+    "static/css/main.33a8efcc.css",
     "static/js/main.6a13a0e7.js"
   ]
 }
