@@ -1,6 +1,5 @@
 import React from "react";
-import "./HomePage.css";
-
+import "./HomePage.module.css";
 import ProductService from "../../services";
 import CategoryPage from "../CategoryPage/CategoryPage";
 import ItemComponent from "../ItemComponent/ItemComponent";
