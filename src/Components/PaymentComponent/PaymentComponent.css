@@ -78,3 +78,23 @@
   background-color: gray;
   border-color: gray;
 }
+
+@media (max-width: 1000px) {
+  .payment-parent-div {
+    width: auto;
+  }
+}
+
+@media (max-width: 655px) {
+  .payment-flex {
+    display: block;
+  }
+  
+  .name-div, 
+  .number-div, 
+  .month-div, 
+  .year-div, 
+  .cvv-div {margin-left: 0;}
+
+  .month-div { margin-bottom: 10px;}
+}

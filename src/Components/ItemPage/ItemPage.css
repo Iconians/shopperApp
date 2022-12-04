@@ -58,3 +58,12 @@
   margin: auto;
   color: white;
 }
+
+@media (max-width: 665px) {
+  .description-info-div {
+    width: 100%;
+    background-color: whitesmoke;
+    margin-top: 25px;
+    border-radius: 20px;
+  }
+}

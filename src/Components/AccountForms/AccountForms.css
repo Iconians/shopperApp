@@ -87,3 +87,13 @@
   color: white;
   font-weight: bold;
 }
+
+@media (max-width: 490px) {
+  .page-header {
+    width: 320px;
+    margin: auto;
+  }
+  .form-parent-div {width: revert;}
+  .radio-buttons-div { width: revert;}
+  .form-label {width: 215px;}
+}

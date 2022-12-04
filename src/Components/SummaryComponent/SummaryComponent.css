@@ -41,3 +41,15 @@
   border-color: gray;
   z-index: 1000;
 }
+
+@media (max-width: 1300px) {
+  .checkout-btn-div {
+    position: unset;
+  }
+}
+
+@media (max-width: 1050px) {
+  .submit-btn {
+    width: 200px;
+  }
+}

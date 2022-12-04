@@ -29,3 +29,10 @@
   margin-top: 20px;
   cursor: pointer;
 }
+
+@media (max-width: 1000px) {
+  .confirmation-comp-parent-div {
+    width: auto;
+    padding-bottom: 20px;
+  }
+}

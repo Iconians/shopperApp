@@ -32,12 +32,6 @@
   margin: auto 0;
 }
 
-.address-grid-spot > h5,
-.name-grid-spot > h5,
-.address-grid-spot > h5,
-.zip-grid-spot > h5,
-
-
 .address-title-grid-spot > h5 {margin-right: 35px;}
 .name-grid-spot > h5 {margin-right: 11px;}
 .address-grid-spot > h5 {margin-right: 34px;}
@@ -117,4 +111,56 @@
   text-transform: uppercase;
   cursor: pointer;
   
+}
+
+
+@media (max-width: 1000px) {
+  .shipping-component-parent-div {
+    margin: auto;
+    width: revert;
+  }
+}
+
+@media (max-width: 410px) {
+  .country-select-div {margin-left: 63px;}
+  .city-select-div {margin-left: 90px;}
+  .state-select-div {margin-left: 85px;}
+  .cell-area-code-input,
+  .phone-area-code-input {
+    margin-left: 20px;
+  }
+}
+
+@media (max-width: 355px) {
+  .grid, .flex {
+    display: block;
+  }
+  .grid > h5 {
+    width: revert;
+  }
+  
+  .address-title-grid-spot > h5, 
+  .name-grid-spot > h5 ,
+  .address-grid-spot > h5, 
+  .zip-grid-spot > h5, 
+  .country-select-div, 
+  .city-select-div, 
+  .state-select-div { margin-right: 0;}
+
+  .input-div { width: revert;}
+  
+  .country-select-div,
+  .city-select-div, 
+  .state-select-div {margin-left: 0;}
+
+  .cell-area-code-input,
+  .phone-area-code-input {
+    margin-left: 10px;
+    width: auto;
+    margin-bottom: 10px;
+  }
+
+  .shipping-method-div {
+    height: 335px;
+  }
 }
