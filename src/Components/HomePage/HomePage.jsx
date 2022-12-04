@@ -71,6 +71,7 @@ class HomePage extends React.Component {
       maxLength: OTHERCARDS.length,
       cartPageError: true,
       inventoryError: false,
+      ariaExpanded: false,
       accounts: {
         testAccount: {
           confirmPassword: "T@st1970",
@@ -894,6 +895,19 @@ class HomePage extends React.Component {
     }
   };
 
+  openList = () => {
+    const { ariaExpanded } = this.state;
+    if (ariaExpanded === false) {
+      this.setState({
+        ariaExpanded: true,
+      });
+    } else {
+      this.setState({
+        ariaExpanded: false,
+      });
+    }
+  };
+
   render() {
     const navHeadings = [
       {
@@ -944,6 +958,7 @@ class HomePage extends React.Component {
       inventoryError,
       quantity,
       error,
+      ariaExpanded,
     } = this.state;
     return (
       <section>
@@ -977,6 +992,14 @@ class HomePage extends React.Component {
               </div>
             )}
             <div>
+              <button
+                onClick={this.openList}
+                className="navbar-toggler"
+                aria-expanded={ariaExpanded}
+                aria-controls="navbarDropdown"
+              >
+                <span>&#9776;</span>
+              </button>
               <ul className="nav-list">
                 {navHeadings.map((heading) => (
                   <li
